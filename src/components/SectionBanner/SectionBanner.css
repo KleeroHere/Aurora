@@ -1,0 +1,39 @@
+.section-banner {
+  position: relative;
+  height: clamp(180px, 18vw, 220px);
+  margin: 0 calc(-1 * var(--space-xl)) 0 -96px;
+  overflow: hidden;
+  background-color: var(--cover-bg);
+
+  --section-banner-mask:
+    linear-gradient(to bottom, transparent 0%, #000 18%, #000 46%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  -webkit-mask-image: var(--section-banner-mask);
+  mask-image: var(--section-banner-mask);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+.section-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--cover-pattern);
+  -webkit-mask-image: var(--cover-pattern-url);
+  mask-image: var(--cover-pattern-url);
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+.section-banner[data-tone="1"] {
+  background-color: color-mix(in srgb, var(--cover-bg) 82%, var(--cover-pattern));
+}
+.section-banner[data-tone="2"] {
+  background-color: color-mix(in srgb, var(--cover-bg) 92%, var(--color-accent));
+}
+.section-banner[data-tone="3"] {
+  background-color: color-mix(in srgb, var(--cover-bg) 88%, var(--cover-pattern));
+}
+

@@ -1,0 +1,62 @@
+[
+  {
+    "canonical": "resident",
+    "aliases": ["client", "participant", "member", "guest"]
+  },
+  {
+    "canonical": "handover",
+    "aliases": ["handoff", "shift change", "changeover", "turnover"]
+  },
+  {
+    "canonical": "consultant",
+    "aliases": ["counselor", "counsellor", "specialist", "staff member"]
+  },
+  {
+    "canonical": "intake",
+    "aliases": ["admission", "admitting", "arrival", "onboarding"]
+  },
+  {
+    "canonical": "relapse",
+    "aliases": ["slip", "lapse", "setback", "return to use"]
+  },
+  {
+    "canonical": "discharge",
+    "aliases": ["completion", "graduation", "leaving", "exit"]
+  },
+  {
+    "canonical": "journal",
+    "aliases": ["log", "logbook", "register", "record book"]
+  },
+  {
+    "canonical": "group",
+    "aliases": ["session", "meeting", "circle", "gathering"]
+  },
+  {
+    "canonical": "curfew",
+    "aliases": ["lights out", "quiet hours", "night rule"]
+  },
+  {
+    "canonical": "escalation",
+    "aliases": ["referral", "calling for help", "involving the lead"]
+  },
+  {
+    "canonical": "de-escalation",
+    "aliases": ["defusing", "cooling off", "calming down"]
+  },
+  {
+    "canonical": "aftercare",
+    "aliases": ["follow-up", "continuing care", "transitional housing"]
+  },
+  {
+    "canonical": "incident",
+    "aliases": ["event", "occurrence", "situation", "episode"]
+  },
+  {
+    "canonical": "chore",
+    "aliases": ["duty", "assignment", "housekeeping task"]
+  },
+  {
+    "canonical": "handbook",
+    "aliases": ["guide", "manual", "playbook"]
+  }
+]

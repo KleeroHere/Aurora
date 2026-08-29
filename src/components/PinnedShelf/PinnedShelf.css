@@ -1,0 +1,104 @@
+.pinned-shelf {
+  margin-top: var(--space-xl);
+}
+
+.pinned-shelf__title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+}
+
+.pinned-shelf__empty {
+  margin-top: var(--space-md);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+  max-width: 60ch;
+}
+
+.pinned-shelf__row {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+  overflow-x: auto;
+  padding-bottom: var(--space-xs);
+}
+
+.pinned-shelf__item {
+  position: relative;
+  flex: 0 0 168px;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  color: var(--color-text-primary);
+  transform: translateY(0);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.pinned-shelf__item:hover,
+.pinned-shelf__item:focus-visible {
+  transform: translateY(-4px);
+}
+
+.pinned-shelf__item-cover {
+  aspect-ratio: 3 / 2;
+}
+
+.pinned-shelf__item-glyph {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.pinned-shelf__item-title {
+  margin: var(--space-sm) var(--space-sm) 0;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pinned-shelf__item-section {
+  margin: 2px var(--space-sm) var(--space-sm);
+  font-family: var(--font-family-utility);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pinned-shelf__item-unpin {
+  position: absolute;
+  top: var(--space-xs);
+  right: var(--space-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--brand-veil) 55%, transparent);
+  color: #ffffff;
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.pinned-shelf__item:hover .pinned-shelf__item-unpin,
+.pinned-shelf__item:focus-within .pinned-shelf__item-unpin {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pinned-shelf__item,
+  .pinned-shelf__item-unpin {
+    transition: none;
+  }
+}

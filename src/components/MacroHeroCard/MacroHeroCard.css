@@ -1,0 +1,46 @@
+.macro-hero-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  color: var(--color-text-primary);
+  transform: translateY(0);
+  transition: transform var(--dur-wow) var(--ease-wow);
+}
+
+.macro-hero-card:hover,
+.macro-hero-card:focus-visible {
+  transform: translateY(-6px);
+}
+
+.macro-hero-card__cover {
+  display: block;
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.macro-hero-card__body {
+  padding: var(--space-lg);
+}
+
+.macro-hero-card__title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+}
+
+.macro-hero-card__meta {
+  margin-top: var(--space-xs);
+  font-family: var(--font-family-utility);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .macro-hero-card {
+    transition: none;
+  }
+}

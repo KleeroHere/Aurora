@@ -1,0 +1,35 @@
+[
+  {
+    "version": "1.2",
+    "date": "2026-08-29",
+    "title": "Training videos in protocols",
+    "items": [
+      "Training videos attached to protocols — they play offline, right under the text, and remember where you stopped.",
+      "Search results mark which protocols have a video and how long it runs.",
+      "Sync with the centre server checks the connection before it tries, and says plainly what is wrong.",
+      "Signed automatic updates: the app offers the new version and verifies the signature before installing."
+    ]
+  },
+  {
+    "version": "1.1",
+    "date": "2026-06-14",
+    "title": "Forms, shift journals and printing",
+    "items": [
+      "Printable forms and shift journals: fill in on paper, keep the master copy in the base.",
+      "Print layout for every material, including tables and diagrams that must fit one page.",
+      "Search now reads the text inside attached files, not just titles.",
+      "Colour schemes for night shifts and for shared screens in the staff room."
+    ]
+  },
+  {
+    "version": "1.0",
+    "date": "2026-04-02",
+    "title": "The handbook goes offline",
+    "items": [
+      "The whole staff handbook lives on the machine: no network, no waiting, nothing to log into.",
+      "Block editor for protocols with checklists, warnings and cross-links between materials.",
+      "Full-text search with typo tolerance and keyboard navigation (Ctrl+K).",
+      "Export and import of the whole base as one file — backups a night consultant can make alone."
+    ]
+  }
+]

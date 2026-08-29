@@ -1,0 +1,63 @@
+.changelog-page {
+  max-width: 70ch;
+}
+
+.changelog-page__eyebrow {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.changelog-page__title {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-xxl);
+  font-weight: 700;
+}
+
+.changelog-page__back {
+  display: inline-block;
+  margin-top: var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+
+.changelog-page__hint {
+  margin-top: var(--space-lg);
+  color: var(--color-text-muted);
+}
+
+.changelog-page__list {
+  list-style: none;
+  margin: var(--space-lg) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.changelog-page__entry {
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+}
+
+.changelog-page__version {
+  font-family: var(--font-family-utility);
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.changelog-page__entry-title {
+  margin-top: 2px;
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+
+.changelog-page__entry-items {
+  margin: var(--space-sm) 0 0;
+  padding-left: 1.2em;
+  color: var(--color-text-secondary);
+}
+
+.changelog-page__entry-items li {
+  margin-top: 4px;
+}

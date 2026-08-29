@@ -1,0 +1,68 @@
+.article-editor {
+  padding: var(--space-lg);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  min-height: 320px;
+}
+
+.article-editor__sticky-toolbar {
+  position: sticky;
+  top: var(--layout-topbar-height);
+  z-index: 5;
+  display: flex;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  margin-bottom: var(--space-sm);
+  border-radius: var(--radius-md);
+}
+
+.article-editor__sticky-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-secondary);
+  transition: var(--transition-smooth);
+}
+
+.article-editor__sticky-button:hover:not(:disabled) {
+  background-color: var(--color-hover);
+  color: var(--color-text-primary);
+}
+
+.article-editor__sticky-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.article-editor .codex-editor__redactor {
+  padding-bottom: var(--space-lg) !important;
+}
+
+.codex-editor,
+.ce-toolbar__plus,
+.ce-toolbar__settings-btn,
+.ce-inline-toolbar,
+.ce-conversion-toolbar,
+.ce-popover {
+  --color-active-icon: var(--color-accent) !important;
+  --color-text-icon-active: var(--color-accent) !important;
+  --color-background-icon-active: color-mix(in srgb, var(--color-accent) 12%, transparent) !important;
+}
+
+.article-editor__init-error {
+  margin: var(--space-md) 0;
+  padding: var(--space-md);
+  border: 1px solid var(--color-danger, #c0392b);
+  border-radius: var(--radius-md, 8px);
+  background: color-mix(in srgb, var(--color-danger, #c0392b) 8%, transparent);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}

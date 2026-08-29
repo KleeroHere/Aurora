@@ -1,0 +1,75 @@
+.section-card {
+  position: relative;
+  z-index: 0;
+  display: block;
+  padding: var(--space-lg);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-smooth);
+}
+
+.section-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-border-strong);
+  transform: translateY(-2px);
+}
+
+.section-card--stacked::before,
+.section-card--stacked::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out);
+}
+
+.section-card--stacked::before {
+  z-index: -1;
+  transform: translateY(4px) scale(0.97);
+  opacity: 0.7;
+}
+
+.section-card--stacked::after {
+  z-index: -2;
+  transform: translateY(8px) scale(0.94);
+  opacity: 0.4;
+}
+
+.section-card--stacked:hover::before,
+.section-card--stacked:focus-visible::before {
+  transform: translateY(6px) scale(0.97);
+}
+
+.section-card--stacked:hover::after,
+.section-card--stacked:focus-visible::after {
+  transform: translateY(12px) scale(0.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-card--stacked::before,
+  .section-card--stacked::after {
+    transition: none;
+  }
+}
+
+:root.lite .section-card--stacked:hover::before,
+:root.lite .section-card--stacked:hover::after {
+  transform: none;
+}
+
+.section-card__title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.section-card__count {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}

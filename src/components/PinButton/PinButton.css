@@ -1,0 +1,64 @@
+.pin-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  border: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+.pin-button--icon {
+  position: absolute;
+  top: var(--space-xs);
+  right: var(--space-xs);
+  z-index: 1;
+  width: 26px;
+  height: 26px;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--brand-veil) 55%, transparent);
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+}
+
+.material-card:hover .pin-button--icon,
+.material-card:focus-within .pin-button--icon,
+.pin-button--icon[data-pinned="true"] {
+  opacity: 1;
+}
+
+.pin-button--icon[data-pinned="true"] {
+  background: var(--color-accent);
+}
+
+.pin-button--icon:disabled {
+  cursor: default;
+}
+
+.pin-button-labeled-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.pin-button--labeled[data-pinned="true"] {
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.pin-button--labeled:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.pin-button__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pin-button--icon {
+    transition: none;
+  }
+}

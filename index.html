@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aurora</title>
+    <script>
+      // Apply the stored palette and lightness before the first React render
+      // to avoid a flash of the wrong palette/lightness at startup
+      // (two-dimensional theme model, phase 1 - both keys are independent).
+      (function () {
+        try {
+          var storedScheme = window.localStorage.getItem("aurora.theme");
+          var scheme =
+            storedScheme === "light" || storedScheme === "dark"
+              ? storedScheme
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          document.documentElement.setAttribute("data-scheme", scheme);
+
+          // The list and the default must match Palette in src/data/types.ts
+          // and DEFAULT_PALETTE in src/context/ThemeContext.tsx, otherwise the
+          // first paint flashes the wrong palette.
+          var palettes = ["aurora", "clinic", "nightshift"];
+          var storedPalette = window.localStorage.getItem("aurora.palette");
+          var palette = palettes.indexOf(storedPalette) >= 0 ? storedPalette : "aurora";
+          document.documentElement.setAttribute("data-theme", palette);
+
+          // P4, task 2 - Lite Mode. The "lite" class is applied right here for
+          // the same reasons as the palette/lightness above: do not flash the
+          // heavy styling on a weak machine for a split second before the
+          // first React render. Auto-detect runs ONLY on first launch (the key
+          // is not written yet); after that the decision is remembered and
+          // only the user changes it in the admin panel (LiteModeContext.tsx).
+          var storedLite = window.localStorage.getItem("aurora.liteMode");
+          var lite;
+          if (storedLite === "true" || storedLite === "false") {
+            lite = storedLite === "true";
+          } else {
+            var weakCpu = typeof navigator.hardwareConcurrency === "number" && navigator.hardwareConcurrency <= 2;
+            var weakMem = typeof navigator.deviceMemory === "number" && navigator.deviceMemory <= 4;
+            lite = weakCpu || weakMem;
+            window.localStorage.setItem("aurora.liteMode", String(lite));
+            if (lite) {
+              // Read and cleared once in LiteModeContext.tsx - the
+              // "enabled automatically" banner shows only now, not on
+              // every subsequent launch.
+              window.localStorage.setItem("aurora.liteMode.autoNoticePending", "true");
+            }
+          }
+          document.documentElement.classList.toggle("lite", lite);
+        } catch (e) {
+          /* localStorage is unavailable - keep the default theme */
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

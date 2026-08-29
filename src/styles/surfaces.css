@@ -1,0 +1,38 @@
+
+.surface-glass {
+  background: color-mix(in srgb, var(--color-surface) 62%, transparent);
+  border: 0.5px solid color-mix(in srgb, var(--surface-glass-border-tint) 25%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -18px 24px -22px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-scheme="dark"] .surface-glass {
+  background: color-mix(in srgb, var(--color-surface) 55%, transparent);
+}
+
+.surface-glass-blur {
+  background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 0.5px solid color-mix(in srgb, var(--surface-glass-border-tint) 25%, transparent);
+}
+
+:root[data-scheme="dark"] .surface-glass-blur {
+  background: color-mix(in srgb, var(--color-surface) 68%, transparent);
+}
+
+:root.lite .surface-glass,
+:root.lite .surface-glass-blur {
+  box-shadow: none;
+}
+
+:root.lite .surface-glass-blur {
+  background: color-mix(in srgb, var(--color-surface) 62%, transparent);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+:root.lite[data-scheme="dark"] .surface-glass-blur {
+  background: color-mix(in srgb, var(--color-surface) 55%, transparent);
+}

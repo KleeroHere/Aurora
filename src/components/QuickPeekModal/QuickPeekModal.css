@@ -1,0 +1,12 @@
+.quick-peek-modal__subheading {
+  margin: var(--space-lg) 0 var(--space-sm);
+  font-size: var(--font-size-lg);
+}
+
+.quick-peek-modal__subheading:first-child {
+  margin-top: 0;
+}
+
+.quick-peek-modal__hint {
+  color: var(--color-text-muted);
+}

@@ -1,0 +1,17 @@
+.reading-progress {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  height: 3px;
+  margin-bottom: var(--space-md);
+  background-color: color-mix(in srgb, var(--color-border) 60%, transparent);
+  pointer-events: none;
+}
+
+.reading-progress__bar {
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: 0% 50%;
+  background-image: var(--ribbon-primary);
+}

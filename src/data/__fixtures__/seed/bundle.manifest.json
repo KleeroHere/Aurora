@@ -1,0 +1,16 @@
+{
+  "dumpFormatVersion": 1,
+  "schemaVersion": 1,
+  "createdAt": "2026-08-02T03:37:47.816372Z",
+  "totalDocCount": 2,
+  "parts": [
+    {
+      "file": "bundle.part001.json.gz",
+      "docCount": 1
+    },
+    {
+      "file": "bundle.part002.json.gz",
+      "docCount": 1
+    }
+  ]
+}

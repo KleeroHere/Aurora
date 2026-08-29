@@ -1,0 +1,103 @@
+.change-timeline__empty {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.change-timeline__day {
+  margin-bottom: var(--space-md);
+}
+
+.change-timeline__day-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) 0;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  list-style: none;
+}
+
+.change-timeline__day-header::-webkit-details-marker {
+  display: none;
+}
+
+.change-timeline__day-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-hover);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+}
+
+.change-timeline__list {
+  position: relative;
+  margin: 0;
+  padding: 0 0 0 var(--space-xl);
+  list-style: none;
+}
+
+.change-timeline__list::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--ribbon-primary);
+  opacity: 0.4;
+}
+
+.change-timeline__item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+}
+
+.change-timeline__avatar {
+  position: absolute;
+  left: calc(var(--space-xl) * -1);
+  top: var(--space-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+.change-timeline__badge {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 6px;
+  border-radius: 50%;
+}
+
+.change-timeline__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.change-timeline__text {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.change-timeline__time {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}

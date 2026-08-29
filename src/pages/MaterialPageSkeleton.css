@@ -1,0 +1,36 @@
+.material-page-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.material-page-skeleton__breadcrumb {
+  height: 11px;
+  width: 30%;
+}
+
+.material-page-skeleton__title {
+  height: 28px;
+  width: 65%;
+}
+
+.material-page-skeleton__meta {
+  height: 12px;
+  width: 25%;
+}
+
+.material-page-skeleton__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.material-page-skeleton__line {
+  height: 14px;
+  width: 100%;
+}
+
+.material-page-skeleton__line--short {
+  width: 70%;
+}

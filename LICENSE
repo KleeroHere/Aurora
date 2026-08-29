@@ -1,0 +1,48 @@
+Aurora Source-Available License
+
+Copyright (c) 2026 Anton Matkevich. All rights reserved.
+
+This repository is published as a portfolio showcase. The source code is
+available to read, but this is not an open-source license.
+
+PERMITTED WITHOUT FURTHER PERMISSION
+
+You may, free of charge:
+
+1. View, clone and download the source code.
+2. Build and run the software on your own devices for personal,
+   non-production purposes: evaluation, study, experimentation.
+3. Reference or quote short excerpts of the code (with attribution) for
+   educational purposes, reviews or articles.
+
+NOT PERMITTED WITHOUT PRIOR WRITTEN CONSENT OF THE COPYRIGHT HOLDER
+
+Any use beyond the above requires the copyright holder's prior written
+consent. In particular, without such consent you may not:
+
+1. Use the software, in whole or in part, in any production setting —
+   commercial, non-profit, charitable, governmental, educational or
+   otherwise — including internal use within an organisation.
+2. Distribute, publish, sublicense or sell the software or derivative
+   works, or offer the software as a service.
+3. Incorporate the code, in whole or in substantial part, into another
+   project or product.
+
+To request permission, open an issue in this repository or contact the
+copyright holder through their GitHub profile. Permission for good causes
+is likely to be granted — but it is asked for, not assumed.
+
+THIRD-PARTY MATERIALS
+
+Third-party components remain under their own licenses, including the
+open-source dependencies listed in package.json and the pattern artwork
+credited in src/assets/patterns/LICENSE.txt (MIT). Nothing in this license
+restricts your rights under those licenses.
+
+NO WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.

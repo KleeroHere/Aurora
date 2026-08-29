@@ -1,0 +1,42 @@
+.cascade-grid > * {
+  animation: cascade-in var(--dur-base) var(--ease-out) backwards;
+}
+
+@keyframes cascade-in {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.cascade-grid > :nth-child(1) { animation-delay: 0ms; }
+.cascade-grid > :nth-child(2) { animation-delay: 25ms; }
+.cascade-grid > :nth-child(3) { animation-delay: 50ms; }
+.cascade-grid > :nth-child(4) { animation-delay: 75ms; }
+.cascade-grid > :nth-child(5) { animation-delay: 100ms; }
+.cascade-grid > :nth-child(6) { animation-delay: 125ms; }
+.cascade-grid > :nth-child(7) { animation-delay: 150ms; }
+.cascade-grid > :nth-child(8) { animation-delay: 175ms; }
+.cascade-grid > :nth-child(9) { animation-delay: 200ms; }
+.cascade-grid > :nth-child(10) { animation-delay: 225ms; }
+.cascade-grid > :nth-child(11) { animation-delay: 250ms; }
+.cascade-grid > :nth-child(12) { animation-delay: 275ms; }
+
+.cascade-grid > :nth-child(n + 13) {
+  animation-duration: 0ms;
+  animation-delay: 0ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cascade-grid > * {
+    animation: none;
+  }
+}
+
+:root.lite .cascade-grid > * {
+  animation: none;
+}

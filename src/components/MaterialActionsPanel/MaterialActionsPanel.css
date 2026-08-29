@@ -1,0 +1,102 @@
+.material-actions-panel {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+}
+
+.material-actions-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle 90px at 85% 15%, color-mix(in srgb, var(--backdrop-blob-1) 20%, transparent), transparent 100%),
+    radial-gradient(circle 80px at 15% 90%, color-mix(in srgb, var(--backdrop-blob-2) 14%, transparent), transparent 100%);
+}
+
+.material-actions-panel__eyebrow {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.material-actions-panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.material-actions-panel__label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.material-actions-panel__move-row {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.material-actions-panel__select {
+  flex: 1;
+  min-width: 160px;
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.material-actions-panel__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-hover);
+  color: var(--color-text-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.material-actions-panel__button:hover:not(:disabled) {
+  background-color: var(--color-active);
+}
+
+.material-actions-panel__button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.material-actions-panel__button--danger {
+  background-color: color-mix(in srgb, var(--color-danger) 12%, var(--color-surface));
+  color: var(--color-danger);
+}
+
+.material-actions-panel__button--danger:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-danger) 22%, var(--color-surface));
+}
+
+.material-actions-panel__error {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}
+
+.material-actions-panel__hint {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}

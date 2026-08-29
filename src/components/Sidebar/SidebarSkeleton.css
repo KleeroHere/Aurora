@@ -1,0 +1,22 @@
+.sidebar-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+}
+
+.sidebar-skeleton__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.sidebar-skeleton__chevron {
+  flex: none;
+  width: 8px;
+  height: 8px;
+}
+
+.sidebar-skeleton__title {
+  height: 12px;
+}

@@ -1,0 +1,90 @@
+
+@media print {
+  :root,
+  body,
+  .app-layout,
+  .app-layout__main,
+  .app-layout__content,
+  .material-page {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .sidebar,
+  .topbar,
+  .breadcrumbs,
+  .app-layout__backdrop,
+  .app-layout__search-scrim,
+  .material-actions-panel,
+  .card-actions-dock,
+  .reading-progress-bar,
+  .section-banner,
+  .toast-host,
+  .pin-button,
+  button {
+    display: none !important;
+  }
+
+  .app-layout {
+    display: block !important;
+    height: auto !important;
+  }
+
+  .app-layout__main {
+    overflow: visible !important;
+  }
+
+  .app-layout__content {
+    padding: 0 !important;
+  }
+
+  .material-page__body,
+  .block-renderer {
+    max-width: none !important;
+  }
+
+  h1, h2, h3, h4 {
+    break-after: avoid-page;
+    page-break-after: avoid;
+  }
+
+  .block-renderer__list,
+  .block-renderer__alert,
+  .block-renderer__quote,
+  .block-renderer__image,
+  table,
+  figure {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .block-renderer__table-scroll {
+    overflow: visible !important;
+    border: none !important;
+  }
+
+  .block-renderer__table {
+    width: 100% !important;
+    table-layout: fixed;
+  }
+
+  .block-renderer__table th,
+  .block-renderer__table td {
+    border: 1px solid #000000 !important;
+    background: transparent !important;
+    word-break: break-word;
+  }
+
+  a {
+    color: #000000 !important;
+    text-decoration: underline;
+  }
+
+  .block-renderer__checklist-label input[type="checkbox"] {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border: 1px solid #000000;
+    border-radius: 2px;
+  }
+}

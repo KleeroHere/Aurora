@@ -1,0 +1,92 @@
+.settings-page {
+  max-width: 70ch;
+}
+
+.settings-page__eyebrow {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.settings-page__title {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-xxl);
+  font-weight: 700;
+}
+
+.settings-page__lead {
+  margin-top: var(--space-sm);
+  color: var(--color-text-secondary);
+}
+
+.settings-page__section {
+  margin-top: var(--space-xl);
+  padding: var(--space-lg);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.settings-page__section-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+.settings-page__section-hint {
+  margin-top: var(--space-xs);
+  margin-bottom: var(--space-md);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.settings-page__password-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.settings-page__input {
+  padding: var(--space-xs) var(--space-sm);
+  background-color: var(--color-hover);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  flex: 1;
+  min-width: 160px;
+}
+
+.settings-page__button {
+  padding: var(--space-xs) var(--space-md);
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: var(--transition-smooth);
+}
+
+.settings-page__button:hover:not(:disabled) {
+  background-color: var(--color-accent-hover);
+}
+
+.settings-page__button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.settings-page__notice {
+  margin-top: var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-success);
+}
+
+.settings-page__error {
+  flex-basis: 100%;
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}

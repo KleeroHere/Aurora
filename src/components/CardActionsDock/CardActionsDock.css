@@ -1,0 +1,65 @@
+.card-actions-dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  background: linear-gradient(to top, color-mix(in srgb, var(--brand-veil) 80%, transparent), transparent);
+  opacity: 0;
+  transform: translateY(100%);
+  transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out);
+  pointer-events: none;
+}
+
+.material-card:hover .card-actions-dock,
+.material-card:focus-within .card-actions-dock {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.card-actions-dock__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  transition: var(--transition-smooth);
+}
+
+.card-actions-dock__button:hover {
+  background-color: rgba(255, 255, 255, 0.24);
+}
+
+.card-actions-dock .pin-button--icon {
+  position: static;
+  opacity: 1;
+  width: 26px;
+  height: 26px;
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.card-actions-dock .pin-button--icon:hover {
+  background-color: rgba(255, 255, 255, 0.24);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-actions-dock {
+    transition: none;
+  }
+}
+
+:root.lite .card-actions-dock {
+  transition: none;
+}

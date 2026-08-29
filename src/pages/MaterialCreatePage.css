@@ -1,0 +1,174 @@
+.material-create-page {
+  max-width: 60ch;
+}
+
+.material-create-page__eyebrow {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.material-create-page__title {
+  margin-top: var(--space-xs);
+  margin-bottom: var(--space-lg);
+  font-size: var(--font-size-xxl);
+  font-weight: 700;
+}
+
+.material-create-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.material-create-page__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.material-create-page__label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.material-create-page__input {
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+}
+
+.material-create-page__input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.material-create-page__error {
+  padding: var(--space-sm) var(--space-md);
+  background-color: color-mix(in srgb, var(--color-danger) 15%, var(--color-surface));
+  border: 1px solid color-mix(in srgb, var(--color-danger) 40%, var(--color-border));
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.material-create-page__actions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+}
+
+.material-create-page__button {
+  padding: var(--space-sm) var(--space-lg);
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.material-create-page__button:hover:not(:disabled) {
+  background-color: var(--color-accent-hover);
+}
+
+.material-create-page__button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.material-create-page__button--secondary {
+  background-color: var(--color-hover);
+  color: var(--color-text-primary);
+}
+
+.material-create-page__types {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.material-create-page__type {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: flex-start;
+  padding: var(--space-sm) var(--space-md);
+  margin-top: var(--space-xs);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.material-create-page__type--active {
+  border-color: var(--color-accent);
+  background-color: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
+}
+
+.material-create-page__type-label {
+  display: block;
+  font-weight: 600;
+  font-size: var(--font-size-base);
+}
+
+.material-create-page__type-hint {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.material-create-page__file-row {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: var(--space-xs);
+}
+
+.material-create-page__file-name {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.material-create-page__file-clear {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.material-create-page__hint {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.material-create-page__cover {
+  margin: var(--space-sm) 0 0;
+  max-width: 220px;
+}
+
+.material-create-page__cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.material-create-page__cover figcaption {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}

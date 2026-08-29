@@ -1,0 +1,172 @@
+.sync-panel__section {
+  margin-top: var(--space-lg);
+  padding: var(--space-lg);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.sync-panel__section:first-child {
+  margin-top: 0;
+}
+
+.sync-panel__section-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+.sync-panel__section-hint {
+  margin-top: var(--space-xs);
+  margin-bottom: var(--space-md);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.sync-panel__button {
+  padding: var(--space-sm) var(--space-lg);
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.sync-panel__button:hover:not(:disabled) {
+  background-color: var(--color-accent-hover);
+}
+
+.sync-panel__button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.sync-panel__button--secondary {
+  background-color: var(--color-hover);
+  color: var(--color-text-primary);
+}
+
+.sync-panel__button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.sync-panel__report {
+  margin-top: var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.sync-panel__resolutions {
+  margin-top: var(--space-sm);
+  padding-left: var(--space-lg);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+}
+
+.sync-panel__progress {
+  margin-top: var(--space-md);
+}
+
+.sync-panel__progress-track {
+  width: 100%;
+  height: 8px;
+  background-color: var(--color-hover);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.sync-panel__progress-fill {
+  height: 100%;
+  background-color: var(--color-accent);
+  transition: width 0.2s ease-out;
+}
+
+.sync-panel__progress-label {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.sync-panel__error {
+  margin-top: var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
+  background-color: color-mix(in srgb, var(--color-danger) 15%, var(--color-surface));
+  border: 1px solid color-mix(in srgb, var(--color-danger) 40%, var(--color-border));
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.sync-panel__server {
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+.sync-panel__server-choice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.sync-panel__input {
+  width: 100%;
+  margin-top: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+}
+
+.sync-panel__server-credentials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.sync-panel__server-credentials .sync-panel__input {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.sync-panel__unlock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  max-width: 32rem;
+}
+
+.sync-panel__unlock .password-field {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+
+.sync-panel__reminder {
+  margin-bottom: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.sync-panel__last-backup {
+  margin-bottom: var(--space-lg);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}

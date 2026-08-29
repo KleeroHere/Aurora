@@ -1,0 +1,108 @@
+.hero-search {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.hero-search .search-input {
+  height: 56px;
+  padding: 0 var(--space-lg);
+  border-radius: var(--radius-pill);
+  transition: var(--transition-wow);
+}
+
+.hero-search .search-input__icon {
+  width: 20px;
+  height: 20px;
+}
+
+.hero-search .search-input__field {
+  font-size: var(--font-size-lg);
+}
+
+.hero-search__results {
+  position: absolute;
+  top: calc(100% + var(--space-sm));
+  left: 0;
+  right: 0;
+  z-index: 10;
+  list-style: none;
+  margin: 0;
+  padding: var(--space-xs);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  max-height: 360px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.hero-search__result {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs) var(--space-sm);
+  width: 100%;
+  padding: var(--space-sm);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  transition: var(--transition-smooth);
+}
+
+.hero-search__result:hover {
+  background-color: var(--color-hover);
+}
+
+.hero-search__result-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.hero-search__hint {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.hero-search__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.hero-search__empty-button {
+  padding: var(--space-xs) var(--space-sm);
+  background-color: var(--color-hover);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-primary);
+  transition: var(--transition-smooth);
+}
+
+.hero-search__empty-button:hover {
+  background-color: var(--color-active);
+}
+
+.hero-search__suggestions {
+  font-size: var(--font-size-xs);
+}
+
+.hero-search__suggestion {
+  padding: 0;
+  color: var(--color-text-primary);
+  text-decoration: underline;
+  font-size: inherit;
+}
+
+.hero-search__result-reason {
+  width: 100%;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}

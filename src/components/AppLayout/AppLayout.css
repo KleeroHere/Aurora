@@ -1,0 +1,128 @@
+.app-layout {
+  display: grid;
+  grid-template-columns: var(--layout-sidebar-width) 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: "sidebar main";
+  height: 100vh;
+  background-color: var(--color-bg);
+  transition: grid-template-columns var(--dur-base) var(--ease-out);
+}
+
+.app-layout--zen {
+  grid-template-columns: 0 1fr;
+}
+
+.app-layout--zen .sidebar {
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+
+.app-layout--zen .sidebar,
+.app-layout--emergency .sidebar {
+  box-shadow: none;
+}
+
+.app-layout--zen .app-layout__backdrop,
+.app-layout--emergency .app-layout__backdrop {
+  left: 0;
+}
+
+.app-layout--emergency {
+  grid-template-columns: 0 1fr;
+}
+
+.app-layout--emergency .sidebar {
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-layout {
+    transition: none;
+  }
+}
+
+.app-layout__main {
+  grid-area: main;
+  min-width: 0;
+  overflow-y: auto;
+  position: relative;
+}
+
+.app-layout__content {
+  padding: var(--space-xl) var(--space-xl) var(--space-xl) 96px;
+}
+
+.app-layout__backdrop {
+  position: fixed;
+  top: 0;
+  left: var(--layout-sidebar-width);
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  opacity: var(--backdrop-strength);
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+  background-image:
+    linear-gradient(var(--daynight-tint), var(--daynight-tint)),
+    url("/textures/noise-tile.png"),
+    radial-gradient(circle at var(--bg-blob-1-x) var(--bg-blob-1-y), var(--bg-blob-1-color), transparent var(--bg-blob-1-size)),
+    radial-gradient(circle at var(--bg-blob-2-x) var(--bg-blob-2-y), var(--bg-blob-2-color), transparent var(--bg-blob-2-size)),
+    radial-gradient(circle at var(--bg-blob-3-x) var(--bg-blob-3-y), var(--bg-blob-3-color), transparent var(--bg-blob-3-size)),
+    radial-gradient(circle at var(--bg-blob-4-x) var(--bg-blob-4-y), var(--bg-blob-4-color), transparent var(--bg-blob-4-size));
+  background-repeat: no-repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 100% 100%, 128px 128px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-blend-mode: normal, overlay, normal, normal, normal, normal;
+}
+
+:root.lite .app-layout__backdrop,
+:root.emergency-mode .app-layout__backdrop {
+  background-image: none;
+}
+
+.app-layout:has(.topbar__search:focus-within) .app-layout__backdrop {
+  opacity: calc(var(--backdrop-strength) * 0.5);
+  transform: translate3d(-8px, 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-layout:has(.topbar__search:focus-within) .app-layout__backdrop {
+    transform: none;
+  }
+}
+
+:root.lite .app-layout:has(.topbar__search:focus-within) .app-layout__backdrop {
+  opacity: var(--backdrop-strength);
+  transform: none;
+}
+
+.app-layout__search-scrim {
+  position: fixed;
+  top: 0;
+  left: var(--layout-sidebar-width);
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  background-color: color-mix(in srgb, var(--color-bg) 55%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.app-layout:has(.topbar__search input:not(:placeholder-shown)) .app-layout__search-scrim,
+.app-layout:has(.hero-search input:not(:placeholder-shown)) .app-layout__search-scrim {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-layout__search-scrim {
+    transition: none;
+  }
+}
+
+:root.lite .app-layout__search-scrim {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background-color: color-mix(in srgb, var(--color-bg) 75%, transparent);
+}

@@ -1,0 +1,75 @@
+.pattern-cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  background-color: var(--cover-bg);
+}
+
+.pattern-cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--cover-pattern);
+  -webkit-mask-image: var(--cover-pattern-url);
+  mask-image: var(--cover-pattern-url);
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+  opacity: var(--cover-pattern-opacity, 0.24);
+  pointer-events: none;
+}
+
+.pattern-cover[data-illustrated] .pattern-cover__art {
+  position: absolute;
+  inset: 12% 12% 42%;
+  background-color: var(--cover-pattern);
+  -webkit-mask-image: var(--cover-illustration-url);
+  mask-image: var(--cover-illustration-url);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.pattern-cover[data-illustrated]::before {
+  opacity: calc(var(--cover-pattern-opacity, 0.24) * 0.85);
+}
+
+.pattern-cover[data-tone="1"] {
+  background-color: color-mix(in srgb, var(--cover-bg) 82%, var(--cover-pattern));
+}
+.pattern-cover[data-tone="2"] {
+  --cover-pattern-opacity: 0.21;
+  background-color: color-mix(in srgb, var(--cover-bg) 92%, var(--color-accent));
+}
+.pattern-cover[data-tone="3"] {
+  --cover-pattern-opacity: 0.3;
+  background-color: color-mix(in srgb, var(--cover-bg) 88%, var(--cover-pattern));
+}
+
+.pattern-cover__title {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+  font-family: var(--font-family-display);
+  font-weight: 600;
+  font-size: clamp(0.8rem, 0.62rem + 0.55vw, 1.05rem);
+  line-height: 1.18;
+  color: var(--cover-ink);
+  text-wrap: balance;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+
+.material-card[data-card-layout="wide"] .pattern-cover__title {
+  -webkit-line-clamp: 2;
+}

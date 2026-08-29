@@ -1,0 +1,52 @@
+.affirmation-widget {
+  position: relative;
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.affirmation-widget__ribbon {
+  flex: 0 0 4px;
+  border-radius: var(--radius-pill);
+  background: var(--ribbon-primary);
+}
+
+.affirmation-widget__body {
+  min-width: 0;
+}
+
+.affirmation-widget__eyebrow {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.affirmation-widget__text {
+  margin-top: var(--space-xs);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-lg);
+  line-height: 1.4;
+}
+
+.affirmation-widget__hide {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.affirmation-widget__hide:hover {
+  background: var(--color-hover);
+  color: var(--color-text-primary);
+}

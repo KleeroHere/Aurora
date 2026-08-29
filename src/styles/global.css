@@ -1,0 +1,174 @@
+@import "./tokens.css";
+@import "./fonts.css";
+@import "./surfaces.css";
+@import "./cascade.css";
+@import "./print.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  font-size: calc(100% * var(--text-scale, 1));
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  transition: var(--transition-smooth);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1,
+.text-display {
+  font-family: var(--font-family-display);
+  font-weight: 600;
+}
+
+.text-utility {
+  font-family: var(--font-family-utility);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+  --ripple-color: var(--color-text-on-accent);
+}
+
+.btn-ripple::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--ripple-color);
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+}
+
+.btn-ripple.btn-ripple--active::after {
+  animation: btn-ripple-pulse var(--dur-wow) var(--ease-wow);
+}
+
+@keyframes btn-ripple-pulse {
+  from {
+    opacity: 0.35;
+    transform: scale(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-ripple.btn-ripple--active::after {
+    animation: none;
+  }
+}
+
+:root.lite .btn-ripple.btn-ripple--active::after {
+  animation: none;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+input {
+  font-family: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-active);
+  color: var(--color-text-primary);
+}
+
+:root[data-scheme="dark"] ::selection {
+  background: color-mix(in srgb, var(--brand-veil) 65%, var(--color-surface));
+  color: #ffffff;
+}
+
+mark.search-highlight {
+  background: var(--color-active);
+  color: var(--color-text-primary);
+  border-radius: 2px;
+}
+
+:root[data-scheme="dark"] mark.search-highlight {
+  background: color-mix(in srgb, var(--brand-veil) 65%, var(--color-surface));
+  color: #ffffff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-scrollbar-thumb);
+  border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-boot-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+}
+
+.app-boot-hint--error {
+  color: var(--color-danger);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--dur-base);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) {
+    animation: none !important;
+  }
+}

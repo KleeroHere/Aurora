@@ -1,0 +1,186 @@
+.print-preview-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  background-color: rgba(6, 6, 12, 0.82);
+}
+
+.print-preview-modal__panel {
+  display: flex;
+  flex-direction: column;
+  width: min(720px, 100%);
+  height: min(880px, 100%);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.print-preview-modal__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.print-preview-modal__title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.print-preview-modal__pager {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex: none;
+}
+
+.print-preview-modal__page-counter {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  padding: 0 var(--space-xs);
+}
+
+.print-preview-modal__icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-secondary);
+  transition: var(--transition-smooth);
+}
+
+.print-preview-modal__icon-button:hover:not(:disabled) {
+  background-color: var(--color-hover);
+  color: var(--color-text-primary);
+}
+
+.print-preview-modal__icon-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.print-preview-modal__stage {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--space-lg);
+  background-color: #16161c;
+}
+
+.print-preview-modal__sheet {
+  position: relative;
+  background-color: #ffffff;
+  aspect-ratio: 210 / 297;
+  height: 100%;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.print-preview-modal__hint {
+  color: #8a8a92;
+}
+
+.print-preview-modal__canvas {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.print-preview-modal__sheet--landscape {
+  aspect-ratio: 297 / 210;
+  height: auto;
+  width: 100%;
+}
+
+.print-preview-modal__html {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: #ffffff;
+}
+
+.print-preview-modal__error {
+  margin: auto;
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+}
+
+.print-preview-modal__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.print-preview-modal__button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-lg);
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: var(--transition-smooth);
+}
+
+.print-preview-modal__button:hover:not(:disabled) {
+  background-color: var(--color-accent-hover);
+}
+
+.print-preview-modal__button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.print-preview-modal__button--secondary {
+  background-color: var(--color-hover);
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+
+.print-preview-modal__button--secondary:hover {
+  background-color: var(--color-active);
+  color: var(--color-text-primary);
+}
+
+.print-preview-modal__print-frame {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: none;
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .print-preview-modal__icon-button,
+  .print-preview-modal__button,
+  .print-preview-modal__button--secondary {
+    transition: none;
+  }
+}

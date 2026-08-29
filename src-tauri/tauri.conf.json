@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Aurora",
+  "version": "1.2.0",
+  "identifier": "com.aurora.knowledgebase",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Aurora — offline knowledge base",
+        "width": 1200,
+        "height": 800,
+        "minWidth": 860,
+        "minHeight": 560
+      }
+    ],
+    "security": {
+      "assetProtocol": {
+        "enable": true,
+        "scope": []
+      },
+      "csp": "default-src 'self'; img-src 'self' data: blob:; media-src 'self' blob: asset: http://asset.localhost; font-src 'self' data:; connect-src 'self' blob: http://localhost:5984 http://127.0.0.1:5984; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'",
+      "devCsp": "default-src 'self'; img-src 'self' data: blob:; media-src 'self' blob: asset: http://asset.localhost; font-src 'self' data:; connect-src 'self' blob: http://localhost:5984 http://127.0.0.1:5984; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none' ws://localhost:1420 http://localhost:1420"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "resources": [
+      "seed/*"
+    ],
+    "createUpdaterArtifacts": false
+  },
+  "plugins": {}
+}

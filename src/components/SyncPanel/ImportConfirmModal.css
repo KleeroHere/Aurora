@@ -1,0 +1,90 @@
+.import-confirm-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  background-color: rgba(10, 10, 20, 0.55);
+}
+
+.import-confirm-modal__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: min(480px, 100%);
+  padding: var(--space-lg);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+}
+
+.import-confirm-modal__title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.import-confirm-modal__hint {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+}
+
+.import-confirm-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.import-confirm-modal__input {
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  letter-spacing: 0.04em;
+}
+
+.import-confirm-modal__input:focus {
+  outline: none;
+  border-color: var(--color-danger);
+}
+
+.import-confirm-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+.import-confirm-modal__button {
+  padding: var(--space-sm) var(--space-lg);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.import-confirm-modal__button--secondary {
+  background-color: var(--color-hover);
+  color: var(--color-text-primary);
+}
+
+.import-confirm-modal__button--danger {
+  background-color: var(--color-danger);
+  color: var(--color-text-on-accent);
+}
+
+.import-confirm-modal__button--danger:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.import-confirm-modal__button--danger:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

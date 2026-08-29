@@ -1,0 +1,107 @@
+.login-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+}
+
+.login-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.35);
+}
+
+.login-screen__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+  min-width: 320px;
+  background-color: var(--color-glass);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+.login-screen__title {
+  font-size: var(--font-size-xxl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.login-screen__hint {
+  color: var(--color-text-secondary);
+  max-width: 32ch;
+}
+
+.login-screen__input {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-hover);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+}
+
+.login-screen__input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.login-screen__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+}
+
+.login-screen__actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.login-screen__button--secondary {
+  background-color: var(--color-hover);
+  color: var(--color-text-primary);
+}
+
+.login-screen__button {
+  padding: var(--space-sm) var(--space-xl);
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.login-screen__button:hover {
+  background-color: var(--color-accent-hover);
+}
+
+[data-theme="aurora"] .login-screen__button {
+  background: var(--gradient-accent);
+  color: var(--color-text-on-gradient);
+  text-shadow: 0 1px 2px rgba(3, 14, 34, 0.55);
+}
+
+[data-theme="aurora"] .login-screen__button:hover {
+  background: var(--color-accent-hover);
+}
+
+.login-screen__version {
+  margin: var(--space-md) 0 0;
+  font-size: var(--font-size-xs, 11px);
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+  text-align: center;
+}

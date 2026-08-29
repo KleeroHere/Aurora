@@ -1,0 +1,3 @@
+The patterns come from the Hero Patterns family (via the pill-pity project), MIT licensed.
+Source: https://github.com/anubra266/pill-pity
+The set was regenerated for this project; the colours were replaced with the app's own.

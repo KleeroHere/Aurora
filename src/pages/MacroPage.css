@@ -1,0 +1,26 @@
+.macro-page__top {
+  margin-top: var(--space-lg);
+}
+
+.macro-page__title {
+  font-size: var(--font-size-xxl);
+  font-weight: 700;
+}
+
+.macro-page__description {
+  margin-top: var(--space-sm);
+  color: var(--color-text-secondary);
+  max-width: 60ch;
+}
+
+.macro-page__hint {
+  margin-top: var(--space-lg);
+  color: var(--color-text-muted);
+}
+
+.macro-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+}
