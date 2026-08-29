@@ -1,5 +1,6 @@
 
 export type IconName =
+  | "menu"
   | "paperclip"
   | "close"
   | "zoom-in"
@@ -34,6 +35,7 @@ const PATHS: Record<IconName, string | string[]> = {
   "arrow-up": "M12 19V5M5 12l7-7 7 7",
   paperclip:
     "M9 12.5 15.5 6a3 3 0 1 1 4.24 4.24l-8.5 8.5a5 5 0 1 1-7.07-7.07l7.79-7.79",
+  menu: "M4 6h16M4 12h16M4 18h16",
   close: "M6 6l12 12M18 6 6 18",
   "zoom-in": "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM21 21l-4.35-4.35M11 8v6M8 11h6",
   "zoom-out": "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM21 21l-4.35-4.35M8 11h6",

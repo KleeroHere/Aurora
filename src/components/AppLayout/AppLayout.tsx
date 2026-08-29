@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import TopBar from "../TopBar/TopBar";
@@ -24,14 +24,39 @@ export default function AppLayout() {
     [location.pathname],
   );
 
+  // On narrow screens the sidebar becomes a drawer. It closes itself on any
+  // navigation and on Escape, so it never traps the user.
+  const [navOpen, setNavOpen] = useState(false);
+  useEffect(() => {
+    setNavOpen(false);
+  }, [location.pathname]);
+  useEffect(() => {
+    if (!navOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setNavOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [navOpen]);
+
   return (
     <div
-      className={"app-layout" + (zenMode ? " app-layout--zen" : "") + (emergencyMode ? " app-layout--emergency" : "")}
+      className={
+        "app-layout" +
+        (zenMode ? " app-layout--zen" : "") +
+        (emergencyMode ? " app-layout--emergency" : "") +
+        (navOpen ? " app-layout--nav-open" : "")
+      }
     >
       <div className="app-layout__backdrop" style={backdropStyle} aria-hidden="true" />
       <Sidebar />
+      <div
+        className="app-layout__nav-scrim"
+        aria-hidden="true"
+        onClick={() => setNavOpen(false)}
+      />
       <main className="app-layout__main">
-        {!zenMode && <TopBar />}
+        {!zenMode && <TopBar onOpenNav={() => setNavOpen(true)} />}
         <div className="app-layout__content">
           <LiteModeAutoNotice />
           {!zenMode && <Breadcrumbs />}

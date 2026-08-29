@@ -309,3 +309,49 @@
   color: var(--color-text-secondary);
   white-space: nowrap;
 }
+
+/* --- Narrow screens ------------------------------------------------------- */
+.topbar__nav-toggle {
+  display: none;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .topbar__nav-toggle {
+    display: inline-flex;
+  }
+
+  .topbar {
+    gap: var(--space-sm);
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
+}
+
+@media (max-width: 640px) {
+  /* The emergency button keeps its meaning but sheds its width. */
+  .topbar__emergency-button span {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  /* The dropdown breaks out of the squeezed search field and uses the whole
+     screen width; anchored under the topbar rather than under the input. */
+  .topbar__results {
+    position: fixed;
+    top: var(--topbar-mobile-results-top, 72px);
+    left: var(--space-sm);
+    right: var(--space-sm);
+    max-height: min(60dvh, 480px);
+  }
+}

@@ -41,6 +41,13 @@ CouchDB server — when one happens to be reachable.
 | **Night-shift palette, emergency protocol** | **Three palettes × light/dark, per account** |
 | ![Night shift](docs/screenshots/dark.jpg) | ![Appearance](docs/screenshots/appearance.jpg) |
 
+<p align="center">
+  <img src="docs/screenshots/mobile-nav.jpg" width="290" alt="Mobile navigation drawer" />
+  &nbsp;&nbsp;
+  <img src="docs/screenshots/mobile-article.jpg" width="290" alt="A protocol on a phone" />
+  <br/><sub>The same build is responsive: on a phone the sidebar becomes a drawer and every screen — protocols, forms, video, the editor — fits the width.</sub>
+</p>
+
 ## The domain, and why it shapes everything
 
 Rehabilitation centres are an unusual software environment. Almost every
@@ -154,6 +161,8 @@ decision in this codebase traces back to one of these facts:
   dimming; text-scale steps.
 - Zen mode for long reading, lite mode that switches off decorative rendering
   on weak hardware, and emergency mode for the nights that go wrong.
+- Responsive down to phone widths: the sidebar becomes a drawer, search takes
+  the whole screen, the PDF viewer goes fullscreen and fits the page.
 - `F1` help that explains the screen you are actually on, a first-run guided
   tour, generative card artwork so a wall of materials stays scannable, and a
   return point that scrolls you back to the card you came from.

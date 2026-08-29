@@ -4,8 +4,20 @@
   grid-template-rows: 1fr;
   grid-template-areas: "sidebar main";
   height: 100vh;
+  height: 100dvh;
   background-color: var(--color-bg);
   transition: grid-template-columns var(--dur-base) var(--ease-out);
+}
+
+/* Scrim behind the mobile navigation drawer; inert on wide screens. */
+.app-layout__nav-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 59;
+  background-color: color-mix(in srgb, var(--color-bg) 55%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease-out);
 }
 
 .app-layout--zen {
@@ -125,4 +137,47 @@
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   background-color: color-mix(in srgb, var(--color-bg) 75%, transparent);
+}
+
+/* --- Narrow screens: the sidebar becomes a drawer over the content -------- */
+@media (max-width: 900px) {
+  .app-layout {
+    grid-template-columns: 0 1fr;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 60;
+    width: min(330px, 86vw);
+    transform: translateX(-100%);
+  }
+
+  .app-layout--nav-open .sidebar {
+    transform: none;
+    box-shadow: 24px 0 48px -12px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Zen and emergency modes hide the sidebar on their own; the drawer state
+     must not resurrect it. */
+  .app-layout--zen .sidebar,
+  .app-layout--emergency .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .app-layout--nav-open .app-layout__nav-scrim {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .app-layout__backdrop,
+  .app-layout__search-scrim {
+    left: 0;
+  }
+
+  .app-layout__content {
+    padding: var(--space-md) var(--space-md) var(--space-xl);
+  }
 }

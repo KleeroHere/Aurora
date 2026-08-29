@@ -46,7 +46,7 @@ function useCompactOnScroll(elementRef: RefObject<HTMLElement | null>) {
 
 const DROPDOWN_LIMIT = 8;
 
-export default function TopBar() {
+export default function TopBar({ onOpenNav }: { onOpenNav?: () => void }) {
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -149,6 +149,14 @@ export default function TopBar() {
 
   return (
     <header className="topbar" ref={topbarRef}>
+      <button
+        type="button"
+        className="topbar__nav-toggle"
+        aria-label="Open the sections menu"
+        onClick={onOpenNav}
+      >
+        <Icon name="menu" />
+      </button>
       <div className="topbar__search" ref={containerRef} data-help="topbar-search">
         <SearchInput
           ref={inputRef}
@@ -260,7 +268,7 @@ export default function TopBar() {
             data-help="topbar-emergency"
           >
             <Icon name="warning" size={14} />
-            Emergency
+            <span>Emergency</span>
           </Link>
         )}
         <HelpButton />

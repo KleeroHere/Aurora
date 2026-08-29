@@ -177,3 +177,31 @@
     transition: none;
   }
 }
+
+/* --- Narrow screens: the viewer takes the whole screen, the page fits ----- */
+@media (max-width: 700px) {
+  .pdf-viewer-modal__panel {
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .pdf-viewer-modal__toolbar {
+    flex-wrap: wrap;
+    row-gap: var(--space-xs);
+  }
+
+  .pdf-viewer-modal__page-area {
+    padding: var(--space-sm);
+  }
+
+  /* The canvas renders at zoom scale; on a phone it must never exceed the
+     screen. Shrinking a denser canvas keeps it sharp, and the zoom buttons
+     keep working on top of that. */
+  .pdf-viewer-modal__canvas {
+    max-width: 100%;
+    height: auto;
+  }
+}

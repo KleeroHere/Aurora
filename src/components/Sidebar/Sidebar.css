@@ -139,3 +139,14 @@
     transition: none;
   }
 }
+
+/* --- Narrow screens: the drawer spends its pixels on navigation ----------- */
+@media (max-width: 900px) {
+  .sidebar__aurora-mark {
+    height: 64px;
+  }
+
+  .sidebar__header {
+    padding-bottom: var(--space-md);
+  }
+}
