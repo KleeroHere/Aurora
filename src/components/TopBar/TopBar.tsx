@@ -21,16 +21,58 @@ const EMERGENCY_SECTION_TITLE = "Crisis situations";
 
 const COMPACT_SCROLL_THRESHOLD = 24;
 
+/**
+ * The margin above the threshold that must survive compacting. Without it a
+ * page with exactly enough room sits right on the boundary and shudders from
+ * a single pixel.
+ */
+const COMPACT_ROOM_MARGIN = 8;
+
+/** How much shorter the bar gets when compact — read from CSS, not guessed. */
+function compactDelta(el: HTMLElement): number {
+  const raw = getComputedStyle(el).getPropertyValue("--topbar-compact-delta");
+  const parsed = Number.parseFloat(raw);
+  return Number.isFinite(parsed) ? parsed : 16;
+}
+
 function useCompactOnScroll(elementRef: RefObject<HTMLElement | null>) {
   useEffect(() => {
     const scrollEl = document.querySelector<HTMLElement>(".app-layout__main");
     if (!scrollEl) return;
 
     let ticking = false;
+    /**
+     * Compacting does not always kick in, and that is not fussiness — a short
+     * article would otherwise make the bar visibly shudder.
+     *
+     * The bar is sticky but still takes up room in the flow, so compacting
+     * makes the page `--topbar-compact-delta` shorter. If there was barely
+     * anything to scroll, the shortened page no longer reaches the current
+     * `scrollTop`, the browser pushes it down — the scroll drops below the
+     * threshold, the class comes off, the height returns, and it repeats. With
+     * the padding animated this runs continuously and looks like shaking.
+     *
+     * The cure is a one-sided check: only turn compacting ON if there will
+     * still be somewhere to scroll past the threshold afterwards. Removing the
+     * class makes the page longer and cannot clamp the scroll, so the reverse
+     * transition needs no check — and must not be measured mid-animation,
+     * where the height is somewhere in between.
+     */
     function update() {
       ticking = false;
-      const compact = scrollEl!.scrollTop > COMPACT_SCROLL_THRESHOLD;
-      elementRef.current?.classList.toggle("topbar--compact", compact);
+      const el = elementRef.current;
+      if (!el) return;
+      const alreadyCompact = el.classList.contains("topbar--compact");
+
+      if (alreadyCompact) {
+        if (scrollEl!.scrollTop <= COMPACT_SCROLL_THRESHOLD) el.classList.remove("topbar--compact");
+        return;
+      }
+
+      const roomExpanded = scrollEl!.scrollHeight - scrollEl!.clientHeight;
+      const roomAfterCompacting = roomExpanded - compactDelta(el);
+      if (roomAfterCompacting <= COMPACT_SCROLL_THRESHOLD + COMPACT_ROOM_MARGIN) return;
+      if (scrollEl!.scrollTop > COMPACT_SCROLL_THRESHOLD) el.classList.add("topbar--compact");
     }
     function onScroll() {
       if (ticking) return;

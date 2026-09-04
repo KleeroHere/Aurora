@@ -198,6 +198,16 @@ export interface UserPreferences {
   palette?: Palette;
   scheme?: Scheme;
   tourSeenAt?: string;
+  /**
+   * When the member of staff finished the induction course and its test.
+   * A date rather than a yes/no flag, for the same reason as `tourSeenAt`:
+   * the course is rewritten together with the induction checklist, and the
+   * date shows who took the older edition. While the field is missing,
+   * signing in leads to the course — see `isTrainingRequired`.
+   */
+  trainingCompletedAt?: string;
+  /** How many questions out of how many were right, kept for the log. */
+  trainingScore?: { correct: number; total: number };
 }
 
 export interface User {

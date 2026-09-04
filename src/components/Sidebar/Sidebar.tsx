@@ -4,6 +4,7 @@ import { useContentIndex } from "../../data/useContentIndex";
 import Accordion from "../Accordion/Accordion";
 import SearchInput from "../SearchInput/SearchInput";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
+import TrainingBadge from "../TrainingBadge/TrainingBadge";
 import SidebarSkeleton from "./SidebarSkeleton";
 import SyncPulseIndicator from "../SyncPulseIndicator/SyncPulseIndicator";
 import { brandIdentity } from "../../context/brandIdentity";
@@ -41,6 +42,11 @@ export default function Sidebar() {
         <ThemeToggle />
       </div>
       <div className="sidebar__logos-divider" aria-hidden="true" />
+
+      {/* Unfinished training, right under the house mark. The badge decides for
+          itself whether to appear: for anybody without training assigned it is
+          not there at all. */}
+      <TrainingBadge />
 
       <div className="sidebar__search" data-help="sidebar-search">
         <SearchInput value={query} onChange={setQuery} placeholder="Find a section or material" />

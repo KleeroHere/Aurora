@@ -1,0 +1,180 @@
+.training-program {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-bottom: var(--space-xl);
+}
+
+.training-program__title {
+  margin: 0;
+  font-size: var(--font-size-2xl, var(--font-size-xl));
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.training-program__hint {
+  margin: 0;
+  max-width: 80ch;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+}
+
+.training-program__overall {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+}
+
+.training-program__error {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+}
+
+/* Cards in a grid: one column on a narrow screen, then as many as fit. */
+.training-program__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-md);
+  align-items: start;
+}
+
+.training-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, 12px);
+  background-color: var(--color-surface);
+}
+
+.training-card--passed {
+  border-color: var(--color-accent);
+}
+
+.training-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.training-card__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.training-card__badge {
+  padding: 2px var(--space-sm);
+  border-radius: 999px;
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-size: var(--font-size-xs, 11px);
+  font-weight: 700;
+  text-transform: lowercase;
+}
+
+.training-card__why {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+}
+
+.training-card__bar {
+  height: 8px;
+  border-radius: 999px;
+  background-color: var(--color-hover);
+  overflow: hidden;
+}
+
+.training-card__bar-fill {
+  height: 100%;
+  background-color: var(--color-accent);
+  transition: width var(--dur-base, 200ms) var(--ease-out, ease-out);
+}
+
+.training-card__counter {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.training-card__actions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.training-card__button {
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.training-card__button--primary {
+  border-color: transparent;
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+
+.training-card__button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.training-card__materials {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.training-card__material {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-secondary);
+}
+
+.training-card__mark {
+  flex-shrink: 0;
+  width: 1em;
+  color: var(--color-text-muted, var(--color-text-secondary));
+}
+
+.training-card__mark--seen {
+  color: var(--color-accent);
+}
+
+.training-card__quiz {
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+}
+
+/*
+  The material list scrolls inside the card, and a row cut off mid-word looked
+  unfinished. Fading the bottom edge makes the cut deliberate and hints that the
+  list carries on.
+*/
+.training-card__materials {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent 100%);
+}

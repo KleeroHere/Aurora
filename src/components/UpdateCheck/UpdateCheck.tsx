@@ -4,6 +4,7 @@ import { noUpdatesPort } from "../../data/updatePort";
 import type { UpdateCheckResult, UpdatePort } from "../../data/updatePort";
 import "./UpdateCheck.css";
 import { humanError } from "../../utils/humanText";
+import UpdateNotesModal from "./UpdateNotesModal";
 
 async function selectUpdatePort(): Promise<UpdatePort> {
   if (!isTauriEnvironment()) return noUpdatesPort;
@@ -17,11 +18,13 @@ export default function UpdateCheck() {
   const [installing, setInstalling] = useState(false);
   const [progress, setProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showNotes, setShowNotes] = useState(false);
 
   async function handleCheck() {
     setChecking(true);
     setError(null);
     setResult(null);
+    setShowNotes(false);
     try {
       const port = await selectUpdatePort();
       setResult(await port.check());
@@ -38,8 +41,12 @@ export default function UpdateCheck() {
       const port = await selectUpdatePort();
       await port.install(setProgress);
       setResult(null);
+      setShowNotes(false);
     } catch (err) {
       setError(humanError(err));
+      // The window closes so the error is visible: it is shown in the panel,
+      // not underneath the modal.
+      setShowNotes(false);
     } finally {
       setInstalling(false);
     }
@@ -72,25 +79,30 @@ export default function UpdateCheck() {
           <p className="update-check__report">
             Version <strong>{result.update.version}</strong> is available (you have {result.update.currentVersion}).
           </p>
-          {result.update.notes && <p className="update-check__notes">{result.update.notes}</p>}
-          <p className="update-check__hint">
-            Installing will close the app and launch the installer. Save any open edit before
-            agreeing.
-          </p>
           <button
             type="button"
             className="update-check__button"
-            onClick={handleInstall}
+            onClick={() => setShowNotes(true)}
             disabled={installing}
           >
-            {installing ? "Installing…" : "Update now"}
+            {installing ? "Installing…" : "See what changed"}
           </button>
-          {installing && (
-            <p className="update-check__report">
-              {progress === null ? "Downloading…" : `Downloaded ${Math.round(progress * 100)}%`}
-            </p>
-          )}
         </div>
+      )}
+
+      {/* Consent is given in a window with the release notes, not next to the
+          button: a person has to see what is being installed before it is
+          installed, not after. */}
+      {showNotes && result?.kind === "available" && (
+        <UpdateNotesModal
+          version={result.update.version}
+          currentVersion={result.update.currentVersion}
+          notes={result.update.notes ?? ""}
+          installing={installing}
+          progress={progress}
+          onConfirm={handleInstall}
+          onCancel={() => setShowNotes(false)}
+        />
       )}
 
       {error && <p className="update-check__error">Failed to update: {error}</p>}

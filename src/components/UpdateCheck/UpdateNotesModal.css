@@ -1,0 +1,112 @@
+.update-notes-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  background-color: rgba(10, 10, 20, 0.55);
+}
+
+.update-notes-modal__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: min(560px, 100%);
+  max-height: min(80vh, 720px);
+  padding: var(--space-lg);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+}
+
+.update-notes-modal__title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.update-notes-modal__version {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+/* Notes can be long: the list scrolls, not the whole window. */
+.update-notes-modal__notes {
+  overflow-y: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.update-notes-modal__heading {
+  margin: var(--space-xs) 0 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+}
+
+.update-notes-modal__paragraph {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+}
+
+.update-notes-modal__list {
+  margin: 0;
+  padding-left: var(--space-lg);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+}
+
+.update-notes-modal__hint {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+}
+
+.update-notes-modal__progress {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.update-notes-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+.update-notes-modal__button {
+  padding: var(--space-sm) var(--space-lg);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.update-notes-modal__button--secondary {
+  background-color: var(--color-hover);
+  color: var(--color-text-primary);
+}
+
+.update-notes-modal__button--primary {
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+
+.update-notes-modal__button--primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.update-notes-modal__button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

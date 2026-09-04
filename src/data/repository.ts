@@ -16,7 +16,7 @@ import {
 } from "./derived";
 import { compareMaterials } from "./sortMaterials";
 import { collectReferencedAttachmentKeys, computeOrphanedAttachmentKeys } from "./attachmentCleanup";
-import { isSafeVideoPath, normalizeVideo, videoOfMaterial } from "./videoPort";
+import { isSafeVideoPath, normalizeVideo } from "./videoPort";
 import { SCHEMA_VERSION } from "./types";
 import type {
   AppLog,
@@ -73,11 +73,24 @@ import type { BackupState, ReminderVerdict } from "./backupReminder";
 import {
   activeServer,
   loadReplicationSettings,
+  previewReplication,
   runReplication,
   saveReplicationSettings,
   toLastSyncRecords,
 } from "./replication";
-import type { ReplicationSettings, SyncOutcome } from "./replication";
+import type { ReplicationSettings, SyncOutcome, SyncPreview } from "./replication";
+import { VIDEO_BINDINGS_ID, loadVideoBindings, videoForMaterial } from "./videoBindings";
+import type { VideoBindingsMap } from "./videoBindings";
+import { loadTrainingSettings, saveTrainingSettings } from "./training";
+import type { TrainingProgress, TrainingSettings } from "./training";
+import {
+  assignTraining,
+  listTrainingProgress,
+  loadTrainingProgress,
+  markModulePassed,
+  recordMaterialView,
+  unassignTraining,
+} from "./trainingProgress";
 
 export { MAX_PINS };
 
@@ -156,16 +169,30 @@ function toSummary(doc: Material): MaterialSummary {
     readingTime: "readingTime" in doc ? doc.readingTime : null,
     file: "file" in doc ? { ext: doc.file.original.ext, size: doc.file.original.size } : null,
     video: (() => {
-      const video = videoOfMaterial(doc);
+      const video = videoForMaterial(doc, videoBindingsCache);
       return video ? { durationSec: video.durationSec } : null;
     })(),
   };
 }
 
+/**
+ * The video bindings table, read once and kept in memory.
+ *
+ * It is needed for EVERY card in a list and every search hit, so fetching it
+ * from the database per material would mean hundreds of extra reads for one
+ * screen. It is re-read wherever the search index is rebuilt — on start, after
+ * a file import and after a sync. Those are exactly the moments it can change.
+ */
+let videoBindingsCache: VideoBindingsMap = {};
+
 async function rebuildSearchIndexFromScratch(): Promise<void> {
   const db = requireContentDb();
   const index = searchIndex!;
   index.clear();
+
+  // BEFORE walking the documents: the summaries built below must already
+  // know the bindings.
+  videoBindingsCache = await loadVideoBindings(db);
 
   const result = await db.allDocs({ include_docs: true });
   for (const row of result.rows) {
@@ -189,6 +216,27 @@ function startChangesFeed(): void {
     if (change.deleted) {
       searchIndex?.remove(change.id);
       changeBus.emit({ op: "deleted", id: change.id });
+      return;
+    }
+
+    /**
+     * Found on 01.09.2026 while the owner was testing by hand: "I imported the
+     * bindings and no videos appeared."
+     *
+     * The bindings table is neither a material nor a section, so the filter
+     * below discarded it, and the cache was only re-read when the app started.
+     * The table can arrive at any moment though — by file import or by a sync
+     * with the server. It looked like "I imported it and nothing happened",
+     * even though the data was already in the database and would have shown up
+     * after a restart.
+     *
+     * Rebuilding the index also re-reads the cache (see its top) and refreshes
+     * the summaries: it is the summaries that carry the "has video" mark.
+     */
+    if (change.id === VIDEO_BINDINGS_ID) {
+      void rebuildSearchIndexFromScratch()
+        .then(() => changeBus.emit({ op: "updated", id: change.id }))
+        .catch(() => undefined);
       return;
     }
 
@@ -388,8 +436,15 @@ export async function getMaterialsBySection(sectionId: string): Promise<Material
 export async function getMaterialById(id: string): Promise<Material | undefined> {
   const db = requireContentDb();
   try {
-    const doc = await db.get(id);
-    return doc as unknown as Material;
+    const doc = (await db.get(id)) as unknown as Material;
+    // The document may carry no `video` key at all — then the clip comes from
+    // the bindings table. The field is filled in here so that the material
+    // page and the player read it as usual and know nothing about bindings.
+    if (!("video" in doc)) {
+      const fromBindings = videoForMaterial(doc, videoBindingsCache);
+      if (fromBindings) return { ...doc, video: fromBindings } as Material;
+    }
+    return doc;
   } catch (err) {
     if ((err as PouchDB.Core.Error).status === 404) return undefined;
     throw err;
@@ -943,8 +998,82 @@ export async function getUserDisplayNames(): Promise<Record<string, string>> {
   return buildUserDisplayNames(await listUsersFromSystemDb(requireSystemDb()));
 }
 
+// --- Induction course for a new consultant ------------------------------------
+
+export async function getTrainingSettings(): Promise<TrainingSettings> {
+  return loadTrainingSettings(requireSystemDb());
+}
+
+export async function setTrainingSettings(
+  patch: Partial<Pick<TrainingSettings, "enabled">>,
+): Promise<TrainingSettings> {
+  return saveTrainingSettings(requireSystemDb(), patch);
+}
+
+export async function getTrainingProgress(userId: string): Promise<TrainingProgress> {
+  return loadTrainingProgress(requireSystemDb(), userId);
+}
+
+/** Everyone's progress — the log the programme lead reads. */
+export async function getAllTrainingProgress(): Promise<TrainingProgress[]> {
+  return listTrainingProgress(requireSystemDb());
+}
+
+/**
+ * Record that a member of staff opened a material.
+ *
+ * The error is swallowed on purpose: this is a background mark made while an
+ * article opens, and breaking the reading of a material over it would be a bad
+ * trade.
+ */
+export async function recordTrainingView(userId: string, materialId: string): Promise<void> {
+  try {
+    await recordMaterialView(requireSystemDb(), userId, materialId);
+  } catch {
+    // Progress is not the centre's data; one lost mark is not worth a broken screen.
+  }
+}
+
+export async function markTrainingModulePassed(
+  userId: string,
+  moduleId: string,
+  pass: { correct: number; total: number },
+): Promise<TrainingProgress> {
+  const saved = await markModulePassed(requireSystemDb(), userId, moduleId, pass);
+  await logAppEvent("info", "training.module.passed", { userId, moduleId, ...pass });
+  return saved;
+}
+
+export async function assignTrainingTo(userId: string, assignedBy: string): Promise<TrainingProgress> {
+  const saved = await assignTraining(requireSystemDb(), userId, assignedBy);
+  await logAppEvent("info", "training.assigned", { userId, assignedBy });
+  return saved;
+}
+
+export async function unassignTrainingFrom(userId: string): Promise<TrainingProgress> {
+  const saved = await unassignTraining(requireSystemDb(), userId);
+  await logAppEvent("info", "training.unassigned", { userId });
+  return saved;
+}
+
+// --- Replication with the server ----------------------------------------------
+
 export async function getReplicationSettings(): Promise<ReplicationSettings> {
   return loadReplicationSettings(requireSystemDb());
+}
+
+/**
+ * What a sync would change, before the sync itself. Reads only lists of ids
+ * and revisions, writes nothing and moves nothing, so it is safe to call
+ * before every press.
+ */
+export async function previewServerSync(): Promise<SyncPreview> {
+  const systemDb = requireSystemDb();
+  const contentDb = requireContentDb();
+  const settings = await loadReplicationSettings(systemDb);
+  const PouchCtor = (contentDb as unknown as { constructor: unknown })
+    .constructor as new (name: string, options?: PouchDB.Configuration.DatabaseConfiguration) => PouchDB.Database;
+  return previewReplication(PouchCtor, systemDb, contentDb, settings);
 }
 
 export async function setReplicationSettings(

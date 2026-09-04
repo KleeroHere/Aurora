@@ -5,3 +5,4 @@ src-tauri/gen/schemas/
 *.local
 .DS_Store
 /videos/
+ui-shots/

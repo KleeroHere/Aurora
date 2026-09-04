@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDocumentTitle } from "../utils/documentTitle";
+import { useTrainingView } from "../utils/useTrainingView";
 import {
   downloadMaterialOriginal,
   getChangeLogForMaterial,
@@ -266,6 +267,9 @@ function MaterialBody({ material, interactiveChecklists }: { material: Material;
 export default function MaterialPage() {
   const { materialId } = useParams<{ materialId: string }>();
   const id = materialId ? decodeURIComponent(materialId) : "";
+  // Training progress: the "opened it" mark. Written only for people with
+  // training assigned, and silently — see useTrainingView.
+  useTrainingView(id || undefined);
   const [material, setMaterial] = useState<Material | null | undefined>(undefined);
   const [section, setSection] = useState<Section | undefined>(undefined);
   useDocumentTitle(material?.title);

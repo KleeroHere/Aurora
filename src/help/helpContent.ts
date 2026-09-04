@@ -11,6 +11,13 @@ export const HELP_TOPICS: HelpTopic[] = [
     body: "The app name with its mark is a link to the home page. Click it any time you feel lost and want to start over. Nothing will be lost.",
   },
   {
+    anchor: "training-badge",
+    screen: "global",
+    order: 15,
+    title: "Your training",
+    body: "It appears while any block of the training programme is unfinished, and it takes you straight there. Inside are the blocks of the induction checklist: you open materials, the bar fills, and once every material is open the block test unlocks.\n\nOnly people the programme lead has assigned training to see the badge. Once every block is passed it disappears on its own.",
+  },
+  {
     anchor: "theme-toggle",
     screen: "global",
     order: 20,
@@ -408,6 +415,7 @@ export const HELP_BY_ANCHOR = new Map(HELP_TOPICS.map((topic) => [topic.anchor, 
 
 export const CHROME_ANCHORS: ReadonlySet<string> = new Set([
   "sidebar-identity",
+  "training-badge",
   "sidebar-search",
   "sidebar-nav",
   "sidebar-admin-link",

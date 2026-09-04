@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
-import { getReplicationSettings, replicateWithServer, setReplicationSettings } from "../../data/repository";
-import type { ReplicationSettings, ReplicationServer, SyncOutcome } from "../../data/replication";
+import {
+  getReplicationSettings,
+  previewServerSync,
+  replicateWithServer,
+  setReplicationSettings,
+} from "../../data/repository";
+import type { ReplicationSettings, ReplicationServer, SyncOutcome, SyncPreview } from "../../data/replication";
 import { probeServer } from "../../data/replication";
 import { pulseExchanging } from "../../data/syncStatusBus";
 import { humanError } from "../../utils/humanText";
+import SyncConfirmModal from "./SyncConfirmModal";
 
 const DATABASE_LABELS: Record<string, string> = {
   system: "Accounts and log",
@@ -24,6 +30,11 @@ export default function ServerSyncSection({ busy, onBusyChange }: { busy: boolea
   const [settings, setSettings] = useState<ReplicationSettings | null>(null);
   const [saving, setSaving] = useState(false);
   const [running, setRunning] = useState(false);
+  // Sync preview: computed before the sync and shown in the confirmation
+  // window. `preparing` is separate from `running` because this is not the sync
+  // yet and there is nothing to interrupt.
+  const [preparing, setPreparing] = useState(false);
+  const [preview, setPreview] = useState<SyncPreview | null>(null);
   const [outcomes, setOutcomes] = useState<SyncOutcome[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [probing, setProbing] = useState(false);
@@ -65,11 +76,44 @@ export default function ServerSyncSection({ busy, onBusyChange }: { busy: boolea
     }
   }
 
-  async function handleSync() {
-    setRunning(true);
+  /**
+   * Pressing "Sync" no longer starts the sync straight away: first it works out
+   * what exactly would change, and the person confirms it.
+   *
+   * The window appears only when there is something to change. Confirming an
+   * empty sync is pointless — an extra click, not caution — so with a zero
+   * preview the run starts immediately and honestly reports zeroes.
+   *
+   * If one of the databases could not be reached, the window is shown anyway —
+   * with a warning and whatever is visible from the other one. That beats a
+   * bare error: there are two databases, and one being unreachable does not
+   * mean the sync is pointless. The person decides, not the script.
+   */
+  async function handleSyncClick() {
+    setPreparing(true);
     onBusyChange(true);
     setError(null);
     setOutcomes(null);
+    try {
+      const next = await previewServerSync();
+      if (next.total === 0 && !next.hasErrors) {
+        await runSync();
+        return;
+      }
+      setPreview(next);
+    } catch (err) {
+      setError(humanError(err));
+    } finally {
+      setPreparing(false);
+      onBusyChange(false);
+    }
+  }
+
+  async function runSync() {
+    setPreview(null);
+    setRunning(true);
+    onBusyChange(true);
+    setError(null);
     pulseExchanging(true);
     try {
       const result = await replicateWithServer();
@@ -173,13 +217,15 @@ export default function ServerSyncSection({ busy, onBusyChange }: { busy: boolea
         <button
           type="button"
           className="sync-panel__button"
-          onClick={handleSync}
-          disabled={running || busy || !addressReady}
+          onClick={handleSyncClick}
+          disabled={preparing || running || busy || !addressReady}
           title={addressReady ? undefined : "Enter the server address and save it first"}
         >
-          {running ? "Syncing…" : "Sync with server"}
+          {preparing ? "Working out the changes…" : running ? "Syncing…" : "Sync with server"}
         </button>
       </div>
+
+      {preview && <SyncConfirmModal preview={preview} onConfirm={runSync} onCancel={() => setPreview(null)} />}
 
       {probeResult && (
         <p className="sync-panel__section-hint" role="status">

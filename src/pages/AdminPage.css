@@ -149,3 +149,74 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
 }
+
+/* The switch in the "Induction course" section. */
+.admin-page__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-page__toggle input:disabled + span {
+  opacity: 0.6;
+}
+
+/* The training log: who it is assigned to and how they are getting on. */
+.admin-page__roster {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.admin-page__roster-title {
+  margin: 0;
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.admin-page__roster-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.admin-page__roster-table th,
+.admin-page__roster-table td {
+  padding: var(--space-xs) var(--space-sm);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-page__roster-table th {
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.admin-page__roster-button {
+  padding: var(--space-xxs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.admin-page__roster-button:hover:not(:disabled) {
+  border-color: var(--color-accent);
+}
+
+.admin-page__roster-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

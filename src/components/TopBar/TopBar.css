@@ -1,5 +1,12 @@
 .topbar {
   --topbar-pad-y: 14px;
+  /*
+    How much shorter the bar gets when compact: two vertical paddings,
+    14px -> 6px each. TopBar.tsx reads this value to work out whether the page
+    has room to compact at all — a short article would otherwise shudder.
+    If you change --topbar-pad-y here or in .topbar--compact, change this too.
+  */
+  --topbar-compact-delta: 16px;
   display: flex;
   align-items: center;
   gap: var(--space-md);

@@ -13,6 +13,11 @@ import {
   describeReplicationError,
   isReplicableDocId,
   loadReplicationSettings,
+  describeDocId,
+  docTypeFromId,
+  isMaterialType,
+  previewSyncOnce,
+  revGeneration,
   runReplication,
   saveReplicationSettings,
   syncOnce,
@@ -141,6 +146,7 @@ describe("server settings are not a constant in the code", () => {
 
 describe("what must not travel between machines", () => {
   it("the seed marker, the log, the shelf and the indexes are filtered out", () => {
+    expect(isReplicableDocId("probe:permissions-check")).toBe(false);
     expect(isReplicableDocId("seedstate")).toBe(false);
     expect(isReplicableDocId("applog:01AAA")).toBe(false);
     expect(isReplicableDocId("pin:user:01AAA:material:x")).toBe(false);
@@ -453,4 +459,132 @@ describe("full sync: accounts first, then materials", () => {
       await contentDb.destroy().catch(() => undefined);
     }
   }, 30000);
+});
+
+describe("sync preview: what will change, before it changes", () => {
+  it("when both sides agree there is nothing to change", async () => {
+    const url = remoteName();
+    const local = freshDb("preview-same");
+    try {
+      await local.put({ _id: "article:one", type: "article", title: "One" });
+      await syncOnce(NodePouchDB, local, url, SERVER);
+
+      const preview = await previewSyncOnce(NodePouchDB, local, url, SERVER);
+      expect(preview.ok).toBe(true);
+      expect(Object.values(preview.counts).reduce((a, b) => a + b, 0)).toBe(0);
+      expect(preview.items).toEqual([]);
+    } finally {
+      await local.destroy().catch(() => undefined);
+    }
+  }, 30000);
+
+  it("a document not here shows as incoming — with its title, not its id", async () => {
+    const url = remoteName();
+    const author = freshDb("preview-author");
+    const reader = freshDb("preview-reader");
+    try {
+      await author.put({ _id: "article:server-only", type: "article", title: "Only on the server" });
+      await syncOnce(NodePouchDB, author, url, SERVER);
+
+      const preview = await previewSyncOnce(NodePouchDB, reader, url, SERVER);
+      expect(preview.counts["incoming-new"]).toBe(1);
+      expect(preview.items).toHaveLength(1);
+      expect(preview.items[0]).toMatchObject({
+        id: "article:server-only",
+        kind: "incoming-new",
+        title: "Only on the server",
+        docType: "article",
+      });
+    } finally {
+      await author.destroy().catch(() => undefined);
+      await reader.destroy().catch(() => undefined);
+    }
+  }, 30000);
+
+  it("an edit on the server is incoming, an edit here is outgoing", async () => {
+    const url = remoteName();
+    const first = freshDb("preview-in");
+    const second = freshDb("preview-out");
+    try {
+      await first.put({ _id: "article:shared", type: "article", title: "Shared" });
+      await syncOnce(NodePouchDB, first, url, SERVER);
+      await syncOnce(NodePouchDB, second, url, SERVER);
+
+      // The second profile edits and sends: for it that is outgoing, for the
+      // first it is incoming.
+      const mine = await second.get<{ _id: string; _rev: string; title: string }>("article:shared");
+      await second.put({ ...mine, title: "Shared, edited on the second" });
+
+      const outgoing = await previewSyncOnce(NodePouchDB, second, url, SERVER);
+      expect(outgoing.counts["outgoing-updated"]).toBe(1);
+      expect(outgoing.counts["incoming-updated"]).toBe(0);
+
+      await syncOnce(NodePouchDB, second, url, SERVER);
+
+      const incoming = await previewSyncOnce(NodePouchDB, first, url, SERVER);
+      expect(incoming.counts["incoming-updated"]).toBe(1);
+      expect(incoming.items[0]).toMatchObject({ id: "article:shared", kind: "incoming-updated" });
+    } finally {
+      await first.destroy().catch(() => undefined);
+      await second.destroy().catch(() => undefined);
+    }
+  }, 30000);
+
+  it("an edit on both sides is shown apart — this is what a sync stays silent about", async () => {
+    const url = remoteName();
+    const first = freshDb("preview-div-a");
+    const second = freshDb("preview-div-b");
+    try {
+      await first.put({ _id: "article:contested", type: "article", title: "Contested" });
+      await syncOnce(NodePouchDB, first, url, SERVER);
+      await syncOnce(NodePouchDB, second, url, SERVER);
+
+      // Both sides edit THEIR copy from a common ancestor and do not sync.
+      const a = await first.get<{ _id: string; _rev: string; title: string }>("article:contested");
+      await first.put({ ...a, title: "The first machine's version" });
+      const b = await second.get<{ _id: string; _rev: string; title: string }>("article:contested");
+      await second.put({ ...b, title: "The second machine's version" });
+      await syncOnce(NodePouchDB, second, url, SERVER);
+
+      const preview = await previewSyncOnce(NodePouchDB, first, url, SERVER);
+      expect(preview.counts.diverging).toBe(1);
+      expect(preview.items[0]).toMatchObject({ id: "article:contested", kind: "diverging" });
+    } finally {
+      await first.destroy().catch(() => undefined);
+      await second.destroy().catch(() => undefined);
+    }
+  }, 30000);
+
+  it("what never travels between machines does not reach the preview", async () => {
+    const url = remoteName();
+    const local = freshDb("preview-filtered");
+    try {
+      await local.put({ _id: "seedstate", status: "seeded" });
+      await local.put({ _id: "applog:0001", level: "info" });
+      await local.put({ _id: "pin:user:1:article:a" });
+      await local.put({ _id: "probe:permissions-test" });
+
+      const preview = await previewSyncOnce(NodePouchDB, local, url, SERVER);
+      expect(Object.values(preview.counts).reduce((a, b) => a + b, 0)).toBe(0);
+    } finally {
+      await local.destroy().catch(() => undefined);
+    }
+  }, 30000);
+
+  it("the revision generation is read from the string, and rubbish does not break it", () => {
+    expect(revGeneration("1-abc")).toBe(1);
+    expect(revGeneration("12-abc")).toBe(12);
+    expect(revGeneration(undefined)).toBe(0);
+    expect(revGeneration("rubbish")).toBe(0);
+  });
+
+  it("materials are told from housekeeping, and a nameless document gets a caption", () => {
+    expect(isMaterialType("article")).toBe(true);
+    expect(isMaterialType("form")).toBe(true);
+    expect(isMaterialType("user")).toBe(false);
+    expect(docTypeFromId("article:intake__the-intake-interview")).toBe("article");
+    expect(docTypeFromId("nocolon")).toBe("other");
+    expect(describeDocId("user:01ABC")).toContain("Account");
+    expect(describeDocId(REPLICATION_SETTINGS_ID)).toBe("Sync settings");
+  });
 });

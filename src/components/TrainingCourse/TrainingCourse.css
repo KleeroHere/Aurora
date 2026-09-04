@@ -1,0 +1,197 @@
+/*
+  The course screen fills the window and lives OUTSIDE the main layout: there
+  is deliberately no sidebar and no top bar here — until the course is passed
+  there is nowhere to go, and showing navigation would only tease.
+*/
+.training {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+}
+
+.training__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding: var(--space-lg) var(--space-xl);
+  background-color: var(--color-sidebar-bg);
+  color: var(--color-text-on-sidebar);
+  box-shadow: var(--shadow-md);
+}
+
+.training__title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+}
+
+.training__subtitle {
+  margin: var(--space-xs) 0 0;
+  max-width: 70ch;
+  color: var(--color-text-on-sidebar-muted);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+}
+
+.training__steps {
+  display: flex;
+  gap: var(--space-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex-shrink: 0;
+}
+
+.training__step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--color-sidebar-border);
+  color: var(--color-text-on-sidebar-muted);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.training__step--done {
+  background-color: var(--color-sidebar-hover);
+  color: var(--color-text-on-sidebar);
+}
+
+.training__step--current {
+  background-color: var(--color-sidebar-accent);
+  border-color: var(--color-sidebar-accent);
+  color: var(--color-text-on-sidebar-accent);
+}
+
+.training__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-xl);
+}
+
+.training__article,
+.training__result,
+.training__questions {
+  max-width: 78ch;
+  margin: 0 auto;
+}
+
+.training__why {
+  max-width: 78ch;
+  margin: 0 auto var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  background-color: var(--color-hover);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+}
+
+.training__article-title {
+  margin: 0 0 var(--space-md);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+}
+
+.training__hint {
+  max-width: 78ch;
+  margin: 0 auto;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.training__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+}
+
+.training__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-xl);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.training__footer--inline {
+  justify-content: flex-start;
+  padding: var(--space-md) 0 0;
+  border-top: none;
+  background: none;
+}
+
+.training__counter {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.training__button {
+  padding: var(--space-sm) var(--space-lg);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.training__button--secondary {
+  background-color: var(--color-hover);
+  color: var(--color-text-primary);
+}
+
+.training__button--primary {
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+
+.training__button--primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.training__button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.training__questions {
+  padding-left: var(--space-lg);
+}
+
+.training__question {
+  margin-bottom: var(--space-lg);
+}
+
+.training__question-text {
+  margin: 0 0 var(--space-sm);
+  font-weight: 600;
+  line-height: var(--line-height-base);
+}
+
+.training__option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-xs) 0;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  cursor: pointer;
+}
+
+.training__review {
+  margin: 0 0 var(--space-md);
+  padding-left: var(--space-lg);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}

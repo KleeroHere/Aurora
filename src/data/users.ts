@@ -2,6 +2,7 @@ import { SCHEMA_VERSION } from "./types";
 import type { Change, Pin, User, UserPreferences } from "./types";
 import { hashPassword, verifyPassword } from "./passwordHash";
 import { ulid } from "./ulid";
+import { assignTraining } from "./trainingProgress";
 
 export const DEFAULT_SEED_PASSWORD = "aurora";
 // Three demo accounts, one per role the centre actually has.
@@ -77,7 +78,28 @@ export async function seedUsersIfNeeded(systemDb: PouchDB.Database): Promise<{ c
     created++;
   }
 
+  await assignDemoTraining(systemDb);
   return { created };
+}
+
+/**
+ * In the demo, training is assigned to the consultant — and to nobody else.
+ *
+ * Training never switches itself on: a lead assigns it to a specific person
+ * (see `isTrainingAssigned`). That is right for a real centre and useless for a
+ * demo, where a visitor signing in would see no trace of the feature at all.
+ *
+ * So the seed does what a lead would do on someone's first day: it assigns the
+ * course to Alex, the consultant. Sign in as Alex and the induction course
+ * comes first; sign in as Sam or Robin and the handbook opens straight away, as
+ * it does for anybody who has worked here a while.
+ */
+async function assignDemoTraining(systemDb: PouchDB.Database): Promise<void> {
+  const users = await listUsers(systemDb);
+  const newcomer = users.find((u) => loginKey(u.login) === loginKey("Alex"));
+  const lead = users.find((u) => loginKey(u.login) === loginKey("Robin"));
+  if (!newcomer) return;
+  await assignTraining(systemDb, newcomer._id, lead?._id ?? newcomer._id).catch(() => undefined);
 }
 
 export interface LoginResult {

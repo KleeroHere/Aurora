@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -8,12 +8,20 @@ import {
   exportDiagnosticsLog,
   getAppLog,
   getChangeLog,
+  getAllTrainingProgress,
   getSections,
+  getTrainingSettings,
   getUserDisplayNames,
   listUsers,
   setSectionHidden,
+  setTrainingSettings,
+  assignTrainingTo,
+  unassignTrainingFrom,
 } from "../data/repository";
 import type { AppLog, Change, MacroCategory, Section, User } from "../data/types";
+import { TRAINING_MODULES } from "../data/training";
+import type { TrainingProgress } from "../data/training";
+import { useCurrentUser } from "../context/CurrentUserContext";
 import { MACRO_CATEGORIES } from "../data/types";
 import { slugify } from "../data/slug";
 import SyncPanel from "../components/SyncPanel/SyncPanel";
@@ -404,6 +412,160 @@ function SectionsSection() {
   );
 }
 
+/**
+ * The induction course.
+ *
+ * The switch is here rather than in "Settings" for the same reason "Sync" is:
+ * this is the programme lead's decision, not a user preference.
+ */
+function TrainingSection() {
+  const [enabled, setEnabled] = useState<boolean | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    getTrainingSettings()
+      .then((s) => setEnabled(s.enabled))
+      .catch((err) => setError(humanError(err)));
+  }, []);
+
+  async function toggle(next: boolean) {
+    setSaving(true);
+    setError(null);
+    try {
+      const saved = await setTrainingSettings({ enabled: next });
+      setEnabled(saved.enabled);
+    } catch (err) {
+      setError(humanError(err));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <section className="admin-page__section">
+      <h2 className="admin-page__section-title">Induction course</h2>
+      <p className="admin-page__section-hint">
+        With the course switched on, a member of staff signing in for the first time reads four
+        articles from the induction checklist and answers ten questions. Every answer has to be
+        right; until then the app does not open. The completion mark belongs to the person and
+        travels to other machines with a sync.
+      </p>
+      <p className="admin-page__section-hint">
+        Do not switch it on in the middle of a shift: nobody added earlier has a completion mark, so
+        they would see the course too. It can only be switched off from here — that is, from inside
+        the app.
+      </p>
+      {enabled === null && !error && <p className="admin-page__section-hint">Loading…</p>}
+      {enabled !== null && (
+        <label className="admin-page__toggle">
+          <input
+            type="checkbox"
+            checked={enabled}
+            disabled={saving}
+            onChange={(e) => void toggle(e.target.checked)}
+          />
+          <span>Training is on</span>
+        </label>
+      )}
+      {error && <p className="admin-page__error">{error}</p>}
+
+      <TrainingRoster enabled={enabled === true} />
+    </section>
+  );
+}
+
+/**
+ * The training log: who it is assigned to and how they are getting on.
+ *
+ * This screen is the reason progress lives in the system database rather than on
+ * the machine: it travels with a sync, so a senior consultant sees people
+ * studying at other computers here too.
+ */
+function TrainingRoster({ enabled }: { enabled: boolean }) {
+  const { currentUser } = useCurrentUser();
+  const [users, setUsers] = useState<User[] | null>(null);
+  const [progress, setProgress] = useState<TrainingProgress[]>([]);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const reload = useCallback(() => {
+    Promise.all([listUsers(), getAllTrainingProgress()])
+      .then(([u, p]) => {
+        setUsers(u);
+        setProgress(p);
+      })
+      .catch((err) => setError(humanError(err)));
+  }, []);
+
+  useEffect(reload, [reload]);
+
+  async function toggleAssign(user: User, assign: boolean) {
+    setBusyId(user._id);
+    setError(null);
+    try {
+      if (assign) await assignTrainingTo(user._id, currentUser?._id ?? "unknown");
+      else await unassignTrainingFrom(user._id);
+      reload();
+    } catch (err) {
+      setError(humanError(err));
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  if (!users) return <p className="admin-page__section-hint">Loading the staff list…</p>;
+
+  return (
+    <div className="admin-page__roster">
+      <h3 className="admin-page__roster-title">Who it is assigned to</h3>
+      <p className="admin-page__section-hint">
+        Training appears for somebody only after it is assigned. Withdrawing an assignment does not
+        erase what was passed: assign it again and the tests are still passed.
+        {!enabled && " Training is switched off altogether right now, so assignments change nothing."}
+      </p>
+      <table className="admin-page__roster-table">
+        <thead>
+          <tr>
+            <th>Person</th>
+            <th>Induction course</th>
+            <th>Blocks</th>
+            <th>Materials opened</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => {
+            const p = progress.find((x) => x.userId === user._id);
+            const assigned = Boolean(p?.assignedAt);
+            const passedModules = Object.keys(p?.modules ?? {}).length;
+            const viewedCount = Object.keys(p?.viewed ?? {}).length;
+            return (
+              <tr key={user._id}>
+                <td>{user.displayName || user.login}</td>
+                <td>{user.preferences?.trainingCompletedAt ? "passed" : assigned ? "not passed" : "—"}</td>
+                <td>{assigned ? `${passedModules} of ${TRAINING_MODULES.length}` : "—"}</td>
+                <td>{assigned ? viewedCount : "—"}</td>
+                <td>
+                  <button
+                    type="button"
+                    className="admin-page__roster-button"
+                    disabled={busyId === user._id}
+                    onClick={() => void toggleAssign(user, !assigned)}
+                  >
+                    {assigned ? "Withdraw" : "Assign"}
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      {error && <p className="admin-page__error">{error}</p>}
+    </div>
+  );
+}
+
 export default function AdminPage() {
   return (
     <div className="admin-page">
@@ -418,6 +580,8 @@ export default function AdminPage() {
       </section>
 
       <UsersSection />
+
+      <TrainingSection />
 
       <SectionsSection />
 

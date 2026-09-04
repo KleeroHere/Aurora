@@ -40,6 +40,8 @@ CouchDB server — when one happens to be reachable.
 | ![Form](docs/screenshots/form.jpg) | ![Section](docs/screenshots/section.jpg) |
 | **Night-shift palette, emergency protocol** | **Three palettes × light/dark, per account** |
 | ![Night shift](docs/screenshots/dark.jpg) | ![Appearance](docs/screenshots/appearance.jpg) |
+| **The induction course on a first sign-in** | **Seven blocks of the training programme** |
+| ![Induction course](docs/screenshots/course.jpg) | ![Training programme](docs/screenshots/training.jpg) |
 
 <p align="center">
   <img src="docs/screenshots/mobile-nav.jpg" width="290" alt="Mobile navigation drawer" />
@@ -62,7 +64,9 @@ decision in this codebase traces back to one of these facts:
   to serve a five-year veteran as a reference and a second-shift newcomer as a
   lesson — hence training **videos attached to the protocol itself**, and
   film-therapy sessions carried as a material type of their own, with
-  discussion questions.
+  discussion questions. The induction checklist that used to be a document
+  people were told to read is now a **course the app walks them through**, with
+  a test at the end that has to be passed.
 - **Paper is not optional.** Handover logs, incident reports, food registers
   exist on paper because that is what regulators and night shifts actually use.
   The app keeps the master copy, generates the printable PDF, and ships
@@ -140,6 +144,27 @@ decision in this codebase traces back to one of these facts:
 - The demo ships six generated clips: four training episodes in the app's
   visual language and two cinematic film-session openers.
 
+**Training**
+
+- A **induction course** on first sign-in: four articles from the handbook,
+  shown one after another, then ten questions. The pass mark is every answer
+  right, and the handbook does not open until it is met. A failed attempt names
+  the articles to re-read but never which question was wrong — with a 100 % bar
+  and free retakes, showing that would turn the test into a search through the
+  options.
+- A **programme of seven blocks** covering the whole handbook, each with its own
+  progress bar and its own test. The test for a block unlocks only once every
+  material in it has been opened. Blocks that are passed stay on the page, so a
+  month later somebody can still find where they read something.
+- Progress is **honest about what it measures**: it counts materials opened, not
+  read, and says so on the card. The proof of knowledge is the test.
+- Training is **assigned to a person**, never switched on for everybody: an
+  update must not turn into a demand that a three-year veteran go back to
+  school. The programme lead sees everyone's progress in one table — including
+  people working at other computers, because progress travels with the sync.
+- A badge under the house mark while anything is unfinished; it disappears on
+  its own.
+
 **Data, sync and updates**
 
 - Streaming export/import of the whole database with attachments, split into
@@ -148,9 +173,17 @@ decision in this codebase traces back to one of these facts:
 - One-button bidirectional sync with any CouchDB 3.x, with a connection probe
   that says *what* is wrong (server asleep, wrong password, no network) before
   you try, conflict accounting, and an automatic backup before every import.
+- **Nothing changes without being shown first.** Before a sync the app compares
+  revisions on both sides and lists, line by line, what will arrive, what will
+  leave, and — the part replication normally stays silent about — what was
+  edited in both places. Divergences are called out by name, because
+  replication does not merge them: it picks a winner by revision string, and a
+  person deserves to know that before pressing the button, not after.
 - Separate backup and restore of the system database (accounts, journal, pins).
 - Signed automatic updates (Tauri updater, minisign): a tampered artifact is
-  refused. Disabled in this demo build.
+  refused. Consent is given in a window that shows **what is actually being
+  installed** — the release notes parsed into headings and lists — rather than
+  next to a button under one unread line. Disabled in this demo build.
 - First run seeds the base from a bundled snapshot, so a new machine is useful
   before it ever sees the network.
 
@@ -192,11 +225,16 @@ flowchart LR
 - `src-tauri/` — the Rust shell: window, CSP, native dialogs, ranged video
   serving, and path validation for every file name that arrives from the
   database (a database that travels between machines can arrive corrupted).
-- Tests: 743 across 62 files — unit and integration suites over the data layer
+- Tests: 808 across 66 files — unit and integration suites over the data layer
   (including replication against a live CouchDB via `AURORA_COUCH_URL` and the
   PDF generator verified through pdf.js itself), plus pure-logic tests for the
   UI decisions that matter: key handling, formatting, print layout, figure
   binding, palette contrast.
+- `scripts/verify_ui.mjs` — an acceptance pass that drives the running app with
+  Playwright the way a visitor would: sign in, walk the induction course, fail
+  the test on purpose, check the programme page. It exists because a green test
+  suite over a broken screen has happened here before, and screenshots of every
+  step land in `ui-shots/` so a failure can be looked at rather than guessed at.
 
 ## Quick start
 
@@ -214,6 +252,13 @@ accounts (`alex` — consultant, `sam` — senior consultant, `robin` — progra
 director; password `aurora`). Six demo clips in `public/videos/` are already
 attached to protocols and films and play in the browser build; for the desktop
 build, copy them into a `videos/` folder next to the executable.
+
+**Which account you sign in as changes what you see.** The seed assigns the
+induction course to `alex`, the way a lead would on somebody's first day: sign
+in as Alex and the course comes first — four articles, then a test that has to
+be passed without a mistake. Sign in as `sam` or `robin` and the handbook opens
+straight away, as it does for anybody who has been here a while; the training
+programme is still there at `/training`.
 
 To try sync, point the sync panel at any CouchDB 3.x with CORS enabled for
 `http://tauri.localhost` and `http://localhost:1420`.

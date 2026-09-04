@@ -1,5 +1,18 @@
 [
   {
+    "version": "1.2.1",
+    "date": "2026-09-01",
+    "title": "Induction training, and nothing changes without asking",
+    "items": [
+      "A new member of staff meets an induction course on their first sign-in: four articles from the handbook, then ten questions. Every answer has to be right, and the app opens only after that.",
+      "A training programme of seven blocks, each with its own progress and its own test. The programme lead sees who is where — including people working at other computers.",
+      "Before syncing with the server the app shows, line by line, what will arrive, what will leave, and what was edited on both sides — and waits for a yes.",
+      "Before an update it shows what is actually being installed, instead of one line of notes next to the button.",
+      "Videos are bound to materials through a table of their own, so a batch of new films can be delivered without touching a single article anybody has edited.",
+      "The top bar no longer shudders when a short article is scrolled."
+    ]
+  },
+  {
     "version": "1.2",
     "date": "2026-08-29",
     "title": "Training videos in protocols",

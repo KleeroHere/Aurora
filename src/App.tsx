@@ -17,6 +17,7 @@ import ChangelogPage from "./pages/ChangelogPage";
 import SearchPage from "./pages/SearchPage";
 import AdminGate from "./components/AdminGate/AdminGate";
 import UserPreferencesSync from "./components/UserPreferencesSync/UserPreferencesSync";
+import TrainingProgramPage from "./pages/TrainingProgramPage";
 import HelpAutoTour from "./components/HelpAutoTour/HelpAutoTour";
 import { HelpProvider } from "./help/HelpContext";
 
@@ -27,8 +28,15 @@ export default function App() {
     <CurrentUserProvider>
       <UserPreferencesSync />
       <HelpProvider>
-        <HelpAutoTour />
         <StartupGate>
+          {/* The tour lives INSIDE the gate. Outside it, it fired 1.2 s after
+              sign-in and, once the induction course appeared, would have run on
+              top of it: the course is its own full-screen layer, and
+              highlighting header elements over it would point at nothing. The
+              gate only renders its children at the "app" stage, so here the
+              tour waits its turn on its own, without a "training in progress"
+              flag. */}
+          <HelpAutoTour />
           <Routes>
             <Route element={<AppLayout />}>
               <Route path="/" element={<HomePage />} />
@@ -40,6 +48,7 @@ export default function App() {
               <Route path="/material/:materialId/edit" element={<ArticleEditPage />} />
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/changelog" element={<ChangelogPage />} />
+              <Route path="/training" element={<TrainingProgramPage />} />
               <Route path="/search/:query" element={<SearchPage />} />
               <Route element={<AdminGate />}>
                 <Route path="/admin" element={<AdminPage />} />
