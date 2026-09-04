@@ -46,6 +46,20 @@ async function signIn(login) {
     await later.click();
     await page.waitForTimeout(2500);
   }
+  // The first-run guided tour starts on its own a moment after the app opens,
+  // and it walks the viewer to the screen it is explaining — which means it
+  // navigates. Close it before doing anything, or it competes for the route.
+  // (This is why the production build failed a check the dev server passed:
+  // the tour got there first, the slower dev build did not.)
+  const scrim = page.locator(".help-overlay__scrim").first();
+  await scrim.waitFor({ timeout: 6000 }).catch(() => {});
+  if (await scrim.count()) {
+    // Escape is what closes it; a click on the scrim is swallowed by the
+    // highlighted element underneath.
+    await page.keyboard.press("Escape");
+    await scrim.waitFor({ state: "detached", timeout: 3000 }).catch(() => {});
+    await page.waitForTimeout(500);
+  }
 }
 
 // --- 1. Alex has training assigned and must meet the induction course --------
@@ -105,21 +119,30 @@ check("Robin has no training badge — it was never assigned", badge === 0);
 await page.screenshot({ path: SHOTS + "/04-robin-home.png" });
 
 // --- 3. The programme page renders its blocks --------------------------------
-await page.goto(URL + "#/training", { waitUntil: "networkidle" }).catch(() => {});
-await page.waitForTimeout(2000);
-let programTitle = await page.locator(".training-program__title").count();
-if (!programTitle) {
-  await page.goto(URL + "training", { waitUntil: "networkidle" }).catch(() => {});
-  await page.waitForTimeout(2000);
-  programTitle = await page.locator(".training-program__title").count();
-}
-check("the training programme page opens", programTitle > 0);
+// Navigate inside the app rather than reloading it. The startup gate wraps the
+// whole page tree, so any cold load lands on the sign-in screen no matter what
+// the address says — that is deliberate, and it means a deep link only works
+// once somebody is already signed in.
+await page.evaluate(() => {
+  window.location.hash = "#/training";
+});
+const programme = page.locator(".training-program__title");
+// Wait for the element rather than a fixed pause: the live demo seeds its
+// database on first load and is slower than the dev server.
+await programme.waitFor({ timeout: 20000 }).catch(() => {});
+const programTitle = await programme.count();
+check("the training programme opens for somebody already signed in", programTitle > 0);
 if (programTitle > 0) {
+  // The cards arrive after their sections are read, so wait for one of them —
+  // the heading renders long before the blocks do.
+  await page.locator(".training-card").first().waitFor({ timeout: 20000 }).catch(() => {});
   const cards = await page.locator(".training-card").count();
   check("the page shows seven blocks", cards === 7, `cards: ${cards}`);
   const counters = await page.locator(".training-card__counter").allInnerTexts();
-  const allCounted = counters.every((t) => /of \d+/.test(t));
-  check("every block knows how many materials it holds", allCounted, counters[0] ?? "");
+  // `every` on an empty list is true, so the count is asserted too — otherwise
+  // this passes cheerfully when nothing rendered at all.
+  const allCounted = counters.length === 7 && counters.every((t) => /of \d+/.test(t));
+  check("every block knows how many materials it holds", allCounted, counters[0] ?? "nothing rendered");
   await page.screenshot({ path: SHOTS + "/05-program.png", fullPage: true });
 }
 
