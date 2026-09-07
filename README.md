@@ -146,12 +146,15 @@ decision in this codebase traces back to one of these facts:
 
 **Training**
 
-- A **induction course** on first sign-in: four articles from the handbook,
-  shown one after another, then ten questions. The pass mark is every answer
-  right, and the handbook does not open until it is met. A failed attempt names
-  the articles to re-read but never which question was wrong — with a 100 % bar
-  and free retakes, showing that would turn the test into a search through the
-  options.
+- A **induction course** on first sign-in: pages shown one after another, then a
+  test. The pass mark is every answer right, and the handbook does not open
+  until it is met. A failed attempt names the pages to re-read but never which
+  question was wrong — with a 100 % bar and free retakes, showing that would turn
+  the test into a search through the options. At the centre this is four
+  articles of the handbook and ten questions on them; **this demo ships two
+  placeholder pages and three trivial questions**, so a visitor can see how the
+  gate works and be through it in half a minute instead of studying somebody
+  else's house rules.
 - A **programme of seven blocks** covering the whole handbook, each with its own
   progress bar and its own test. The test for a block unlocks only once every
   material in it has been opened. Blocks that are passed stay on the page, so a
@@ -225,7 +228,7 @@ flowchart LR
 - `src-tauri/` — the Rust shell: window, CSP, native dialogs, ranged video
   serving, and path validation for every file name that arrives from the
   database (a database that travels between machines can arrive corrupted).
-- Tests: 808 across 66 files — unit and integration suites over the data layer
+- Tests: 806 across 66 files — unit and integration suites over the data layer
   (including replication against a live CouchDB via `AURORA_COUCH_URL` and the
   PDF generator verified through pdf.js itself), plus pure-logic tests for the
   UI decisions that matter: key handling, formatting, print layout, figure
@@ -255,8 +258,8 @@ build, copy them into a `videos/` folder next to the executable.
 
 **Which account you sign in as changes what you see.** The seed assigns the
 induction course to `alex`, the way a lead would on somebody's first day: sign
-in as Alex and the course comes first — four articles, then a test that has to
-be passed without a mistake. Sign in as `sam` or `robin` and the handbook opens
+in as Alex and the course comes first — two placeholder pages, then a
+three-question test that has to be passed without a mistake. Sign in as `sam` or `robin` and the handbook opens
 straight away, as it does for anybody who has been here a while; the training
 programme is still there at `/training`.
 

@@ -74,14 +74,14 @@ if (courseTitle > 0) {
   check("the course is addressed to the person by name", /Alex/.test(subtitle), subtitle.slice(0, 70));
   check("the course heading reads as expected", /Induction/i.test(heading), heading);
   const article = await page.locator(".training__article-title").innerText().catch(() => "");
-  check("the first article of the course opened", article.length > 0, article);
+  check("the first page of the course opened", article.length > 0, article);
   await page.screenshot({ path: SHOTS + "/01-course.png" });
 
   const next = page.locator(".training__button--primary");
   check("there is a button to move on", (await next.count()) > 0, await next.innerText().catch(() => ""));
 
-  // Walk all four articles through to the test.
-  for (let i = 0; i < 4; i++) {
+  // Walk every page of the course through to the test.
+  for (let i = 0; i < 6; i++) {
     await page.locator(".training__body").evaluate((el) => el.scrollTo(0, el.scrollHeight));
     await page.waitForTimeout(400);
     const label = await next.innerText().catch(() => "");
@@ -90,10 +90,10 @@ if (courseTitle > 0) {
     if (/test/i.test(label)) break;
   }
   const questions = await page.locator(".training__question").count();
-  check("after four articles the ten-question test opens", questions === 10, `questions: ${questions}`);
+  check("after the last page the test opens", questions === 3, `questions: ${questions}`);
   await page.screenshot({ path: SHOTS + "/02-quiz.png", fullPage: true });
 
-  if (questions === 10) {
+  if (questions === 3) {
     // Answer the first option to every question: some are wrong on purpose.
     // The bar is 100 %, so this must not let anybody through.
     for (const group of await page.locator(".training__question").all()) {

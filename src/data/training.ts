@@ -1,5 +1,6 @@
 import { SCHEMA_VERSION } from "./types";
-import { seedMaterialId } from "./seedData";
+import type { EditorJsOutputData } from "./types";
+import { buildOutputData, eBlockHeader, eBlockParagraph } from "./seedData";
 import {
   QUESTIONS_CRISIS,
   QUESTIONS_GROUPS,
@@ -20,30 +21,45 @@ import {
  *
  * Two parts, deliberately different in weight:
  *
- *   - **The induction course** — four articles and a ten-question test, shown
- *     the first time a person signs in. It is a hard gate: no full access to the
- *     app until it is passed, and the pass mark is every question right.
+ *   - **The induction course** — a few pages and a test, shown the first time a
+ *     person signs in. It is a gate: no full access to the app until it is
+ *     passed, and the pass mark is every question right.
  *   - **The programme** — seven blocks covering the whole handbook, each with
  *     its own progress bar and its own test. Not a gate: it runs alongside the
  *     work over the first month, and the programme lead watches it from their
  *     own machine.
  *
- * HOW TO CHANGE IT. The steps, blocks and questions below are plain data. The
- * order of the steps is the order they are shown in. Changing them needs a
- * rebuild: the course is deliberately NOT kept in the database, because a sync
- * with the server could otherwise swap the questions out from under somebody
- * halfway through their test. If it ever needs to be editable without a
- * rebuild, move it into a settings document — and then protect that document
- * from replication, the way `seedstate` is protected.
+ * IN THIS DEMO BUILD THE COURSE IS A STAND-IN. At the centre it is four
+ * articles of the handbook and ten questions on them — twenty minutes of real
+ * reading before the app opens. That is right for somebody starting a job and
+ * wrong for somebody who opened the demo to look around: they would meet a wall
+ * of text about a house they will never work in. So the demo ships two
+ * placeholder pages and three questions anybody can answer, and a visitor is
+ * through the gate in half a minute having seen exactly how it works.
+ *
+ * HOW TO PUT THE REAL COURSE BACK. The steps and questions below are plain
+ * data: give each step the text it should show and each question a `source`
+ * naming the step its answer is on. Changing them needs a rebuild: the course
+ * is deliberately NOT kept in the database, because a sync with the server
+ * could otherwise swap the questions out from under somebody halfway through
+ * their test.
+ *
+ * The steps carry their own text rather than pointing at materials, which is
+ * also why the course cannot arrive half-built: there is no way for the pages
+ * to be missing from a machine the app itself reached.
  */
 
 export const TRAINING_SETTINGS_ID = "settings:training";
 
 export interface TrainingStep {
-  /** The `_id` of the material in the database. */
-  materialId: string;
-  /** Why this article is in the course — shown above the text. */
+  /** Identifies the step. A question names it in `source`. */
+  id: string;
+  /** Shown as the heading of the page. */
+  title: string;
+  /** Why this page is in the course — shown above the text. */
   why: string;
+  /** The text of the page, in the same block format as an article. */
+  body: EditorJsOutputData;
 }
 
 export interface TrainingQuestion {
@@ -52,170 +68,95 @@ export interface TrainingQuestion {
   options: string[];
   /** Index of the right option in `options`. */
   correct: number;
-  /** Which article the answer is in — used to suggest what to re-read. */
+  /** Which page the answer is on — used to suggest what to re-read. */
   source: string;
 }
 
-const article = (section: string, name: string) => seedMaterialId("article", section, name);
-
 export const TRAINING_STEPS: TrainingStep[] = [
   {
-    materialId: article("house-rules", "House rules in one page"),
-    why: "What the house runs on. Read with every newcomer on their second day.",
+    id: "demo-what-this-is",
+    title: "What this page is",
+    why: "A placeholder. It stands where an article of the handbook stands in the real build.",
+    body: buildOutputData([
+      eBlockParagraph(
+        "This page is a stand-in. In the build running at the centre the induction " +
+          "course opens four articles of the handbook here — the house rules, the " +
+          "limits on a consultant, the first twenty-four hours of a newcomer, the " +
+          "handover between shifts — and a new member of staff reads them before the " +
+          "app will open for them.",
+      ),
+      eBlockParagraph(
+        "None of that is in the demo. What is here is the mechanism itself: pages " +
+          "shown one after another, then a test, and the handbook behind it.",
+      ),
+      eBlockHeader("What to look at", 3),
+      eBlockParagraph(
+        "The “Next” button waits until the page has been scrolled to the end — on a " +
+          "page this short there is nothing to scroll, so it is live at once. The test " +
+          "after the last page has to be answered without a mistake, and a failed " +
+          "attempt names the pages worth re-reading without saying which question went " +
+          "wrong.",
+      ),
+    ]),
   },
   {
-    materialId: article("house-rules", "What consultants must not do"),
-    why: "The limits on your side of the work. Any one of them ends the shift.",
-  },
-  {
-    materialId: article("intake", "The first twenty-four hours"),
-    why: "The shift you will be handed most often: somebody new at the door.",
-  },
-  {
-    materialId: article("night-shift", "Handover between shifts"),
-    why: "How a shift ends, and what the next one has to be told.",
+    id: "demo-and-then-a-test",
+    title: "And then a test",
+    why: "The second and last page of the demo course. Three questions after it.",
+    body: buildOutputData([
+      eBlockParagraph(
+        "Three questions follow this page, and none of them is about rehabilitation. " +
+          "They are there so the shape of the gate can be seen without asking a " +
+          "visitor to study a handbook first.",
+      ),
+      eBlockParagraph(
+        "The bar is every answer right, exactly as it is in production. Retakes are " +
+          "free, so getting one wrong on purpose costs nothing but a click — and the " +
+          "screen that comes back is worth looking at.",
+      ),
+    ]),
   },
 ];
 
 /**
  * The induction test.
  *
- * Every answer follows the text of the four articles above word for word. A
- * question whose answer is not written on a page the person was shown is not
- * allowed here: the pass mark is 100 %, and somebody must be able to reach it
- * by reading what they were given.
+ * Three questions, deliberately trivial: this is a demo of a gate, not of a
+ * curriculum. The rule they keep from the real course is that the answer must
+ * be reachable from what the person was shown — here, from general knowledge.
  */
 export const TRAINING_QUESTIONS: TrainingQuestion[] = [
   {
-    id: "q-door",
-    question: "What does the house rule about the door say?",
-    options: [
-      "Nothing that alters your state comes through the door",
-      "Only staff may open the door",
-      "Deliveries are checked once a week",
-      "The door is locked after lights out",
-    ],
-    correct: 0,
-    source: article("house-rules", "House rules in one page"),
-  },
-  {
-    id: "q-chores",
-    question: "Who does a chore?",
-    options: [
-      "Whoever is free at the time",
-      "The person whose name is on the rota",
-      "The newest resident",
-      "Whoever the duty consultant picks that morning",
-    ],
+    id: "q-two-plus-two",
+    question: "How much is 2 + 2?",
+    options: ["3", "4", "5", "22"],
     correct: 1,
-    source: article("house-rules", "House rules in one page"),
+    source: "demo-what-this-is",
   },
   {
-    id: "q-money",
-    question: "A resident asks to borrow money until the weekend. What do the limits say?",
-    options: [
-      "Lend it if the sum is small",
-      "Lend it and tell the lead afterwards",
-      "Do not lend or borrow money, from anyone, for any reason",
-      "Lend it only against something of theirs",
-    ],
+    id: "q-sky",
+    question: "What colour is the sky on a clear day?",
+    options: ["Blue", "Green", "Brown", "Chequered"],
+    correct: 0,
+    source: "demo-what-this-is",
+  },
+  {
+    id: "q-dog",
+    question: "What does a dog say?",
+    options: ["Moo", "Miaow", "Woof", "Nothing at all"],
     correct: 2,
-    source: article("house-rules", "What consultants must not do"),
-  },
-  {
-    id: "q-discussing",
-    question: "Which of these is on the list of things a consultant must not do?",
-    options: [
-      "Discussing one resident with another",
-      "Asking a resident how they slept",
-      "Writing in the journal during a shift",
-      "Sitting down during a conversation",
-    ],
-    correct: 0,
-    source: article("house-rules", "What consultants must not do"),
-  },
-  {
-    id: "q-unwell",
-    question: "You are unwell enough that you need to sit down. What does the list say about working the shift?",
-    options: [
-      "Work it, but hand over early",
-      "Do not work it",
-      "Work it if there is nobody to replace you",
-      "Work it, but do not run group",
-    ],
-    correct: 1,
-    source: article("house-rules", "What consultants must not do"),
-  },
-  {
-    id: "q-rules-day-two",
-    question: "A newcomer has just arrived. When are the rules read?",
-    options: [
-      "At the door, before anything else",
-      "Together, on the second day",
-      "At the first morning circle",
-      "Only if the person asks",
-    ],
-    correct: 1,
-    source: article("intake", "The first twenty-four hours"),
-  },
-  {
-    id: "q-bad-first-day",
-    question: "Which of these is listed as a sign of a bad first day?",
-    options: [
-      "The newcomer heard four different versions of the schedule",
-      "The newcomer went to bed early",
-      "The newcomer did not speak at supper",
-      "The newcomer asked to call home",
-    ],
-    correct: 0,
-    source: article("intake", "The first twenty-four hours"),
-  },
-  {
-    id: "q-warn-night",
-    question: "How is the night shift warned that somebody new has arrived?",
-    options: [
-      "By name, not with the word “newcomer” in the log",
-      "With a note on the office door",
-      "Only if the person seems upset",
-      "At the morning circle the next day",
-    ],
-    correct: 0,
-    source: article("intake", "The first twenty-four hours"),
-  },
-  {
-    id: "q-handover-message",
-    question: "A handover sent as a message counts as what?",
-    options: [
-      "A handover, if it is detailed enough",
-      "A handover that did not happen",
-      "A handover, once the next shift replies",
-      "A handover, if the log is filled in later",
-    ],
-    correct: 1,
-    source: article("night-shift", "Handover between shifts"),
-  },
-  {
-    id: "q-handover-cannot-meet",
-    question: "You truly cannot meet for the handover. What does the rule say?",
-    options: [
-      "Send the log by message and ask them to sign it",
-      "Phone — and write the log yourself, not the other person",
-      "Ask a resident to pass it on",
-      "Leave a note by the door",
-    ],
-    correct: 1,
-    source: article("night-shift", "Handover between shifts"),
+    source: "demo-and-then-a-test",
   },
 ];
 
 /**
  * Every question right, or the attempt does not count.
  *
- * This is not strictness for its own sake. The course is four articles long and
- * the answers are on the page; at a lower bar somebody can get through it
- * without having read one of them, and the one they skipped is the one that
- * matters at three in the morning. Retakes are free and unlimited — the cost of
- * the high bar is a few minutes, not a job.
+ * This is not strictness for its own sake. In the real course the answers are
+ * on the pages the person was just shown; at a lower bar somebody can get
+ * through without having read one of them, and the one they skipped is the one
+ * that matters at three in the morning. Retakes are free and unlimited — the
+ * cost of the high bar is a few minutes, not a job.
  */
 export const TRAINING_PASS_RATIO = 1;
 
@@ -367,31 +308,6 @@ export function isTrainingRequired(
   if (!user) return false;
   if (!isTrainingAssigned(progress)) return false;
   return !user.preferences?.trainingCompletedAt;
-}
-
-/**
- * Are all of the course articles actually in this database?
- *
- * The course is a gate that only passing it can lift. If the articles have not
- * reached this machine yet — a partial seed, a sync caught halfway — a person
- * would hit a screen that cannot be completed, and there would be nothing
- * inside the app to fix it with. So the gate is not raised at all while there
- * is nothing to show: a course that did not appear is a smaller problem than a
- * member of staff locked out.
- *
- * The loader is passed in as a parameter, so the check is visible in tests and
- * the data module does not drag the repository in behind it.
- */
-export async function areCourseMaterialsAvailable(
-  loadMaterial: (id: string) => Promise<unknown | null | undefined>,
-  steps: TrainingStep[] = TRAINING_STEPS,
-): Promise<boolean> {
-  try {
-    const found = await Promise.all(steps.map((s) => loadMaterial(s.materialId)));
-    return found.every((m) => m !== null && m !== undefined);
-  } catch {
-    return false;
-  }
 }
 
 // --- One person's progress ----------------------------------------------------

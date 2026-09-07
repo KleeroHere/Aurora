@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import BlockRenderer from "../BlockRenderer/BlockRenderer";
-import { getMaterialById, updateUserPreferences } from "../../data/repository";
-import type { Material } from "../../data/types";
+import { updateUserPreferences } from "../../data/repository";
 import {
   TRAINING_QUESTIONS,
   TRAINING_STEPS,
@@ -15,16 +14,17 @@ import "./TrainingCourse.css";
  * The induction course — the screen between signing in and the app itself.
  *
  * What the course contains and which questions it asks live in data/training.ts,
- * along with the reasoning for why the mandatory part is four articles rather
- * than the whole handbook.
+ * along with the reasoning for why this demo build shows two placeholder pages
+ * and three easy questions where the centre's build shows four articles of the
+ * handbook and ten questions on them.
  *
  * Three decisions worth knowing before editing this screen:
  *
- * 1. **"Next" waits until the article has been scrolled to the end.** Not a
+ * 1. **"Next" waits until the page has been scrolled to the end.** Not a
  *    defence against bad faith (trivially bypassed) but against absent-minded
  *    skipping: somebody hammering "Next" by reflex hits a disabled button and at
- *    least learns what is being asked of them. If the article is shorter than
- *    the screen and there is nothing to scroll, the button is live immediately —
+ *    least learns what is being asked of them. If the page is shorter than the
+ *    screen and there is nothing to scroll, the button is live immediately —
  *    otherwise it would never enable at all.
  *
  * 2. **The completion mark is written BEFORE letting anybody through, and only
@@ -48,7 +48,6 @@ export default function TrainingCourse({
 }) {
   const [phase, setPhase] = useState<Phase>("reading");
   const [stepIndex, setStepIndex] = useState(0);
-  const [material, setMaterial] = useState<Material | null | undefined>(undefined);
   const [readToEnd, setReadToEnd] = useState(false);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [result, setResult] = useState<TrainingResult | null>(null);
@@ -60,20 +59,7 @@ export default function TrainingCourse({
   const isLastStep = stepIndex === TRAINING_STEPS.length - 1;
 
   useEffect(() => {
-    if (phase !== "reading" || !step) return;
-    let cancelled = false;
-    setMaterial(undefined);
     setReadToEnd(false);
-    getMaterialById(step.materialId)
-      .then((doc) => {
-        if (!cancelled) setMaterial(doc ?? null);
-      })
-      .catch(() => {
-        if (!cancelled) setMaterial(null);
-      });
-    return () => {
-      cancelled = true;
-    };
   }, [phase, step]);
 
   /** Scrolled to the end — and "nothing to scroll" counts as the end too. */
@@ -85,10 +71,10 @@ export default function TrainingCourse({
   }, []);
 
   useEffect(() => {
-    // The material has just rendered — check straight away: a short article will
-    // never fire a scroll event.
-    if (phase === "reading" && material) checkScrolled();
-  }, [phase, material, checkScrolled]);
+    // The page has just rendered — check straight away: a short one will never
+    // fire a scroll event.
+    if (phase === "reading") checkScrolled();
+  }, [phase, step, checkScrolled]);
 
   async function finish(passed: TrainingResult) {
     setSaving(true);
@@ -121,14 +107,14 @@ export default function TrainingCourse({
         <div>
           <h1 className="training__title">Induction course</h1>
           <p className="training__subtitle">
-            {displayName}, this is your first sign-in. Read four articles and answer ten questions —
-            after that the whole handbook opens.
+            {displayName}, this is your first sign-in. Read {TRAINING_STEPS.length} pages and answer{" "}
+            {TRAINING_QUESTIONS.length} questions — after that the whole handbook opens.
           </p>
         </div>
         <ol className="training__steps" aria-label="Course steps">
           {TRAINING_STEPS.map((s, i) => (
             <li
-              key={s.materialId}
+              key={s.id}
               className={
                 "training__step" +
                 (phase === "reading" && i === stepIndex ? " training__step--current" : "") +
@@ -150,22 +136,11 @@ export default function TrainingCourse({
       {phase === "reading" && (
         <>
           <div className="training__body" ref={scrollRef} onScroll={checkScrolled}>
-            {material === undefined && <p className="training__hint">Opening the article…</p>}
-            {material === null && (
-              <p className="training__hint">
-                The article “{step?.materialId}” is not in this database. The course can be skipped:
-                tell your lead — the materials have most likely not reached this computer yet.
-              </p>
-            )}
-            {material && (
+            {step && (
               <article className="training__article">
                 <p className="training__why">{step.why}</p>
-                <h2 className="training__article-title">{material.title}</h2>
-                {material.type === "article" ? (
-                  <BlockRenderer data={material.body} materialId={material._id} />
-                ) : (
-                  <p className="training__hint">This material is a file — open it in the app after the course.</p>
-                )}
+                <h2 className="training__article-title">{step.title}</h2>
+                <BlockRenderer data={step.body} />
               </article>
             )}
           </div>
@@ -180,13 +155,13 @@ export default function TrainingCourse({
               Back
             </button>
             <span className="training__counter">
-              Article {stepIndex + 1} of {TRAINING_STEPS.length}
-              {!readToEnd && material ? " — scroll to the end" : ""}
+              Page {stepIndex + 1} of {TRAINING_STEPS.length}
+              {!readToEnd ? " — scroll to the end" : ""}
             </span>
             <button
               type="button"
               className="training__button training__button--primary"
-              disabled={!readToEnd && material !== null}
+              disabled={!readToEnd}
               onClick={() => {
                 if (isLastStep) setPhase("test");
                 else setStepIndex((i) => i + 1);
@@ -202,8 +177,8 @@ export default function TrainingCourse({
         <>
           <div className="training__body">
             <p className="training__why">
-              Ten questions on what you have read. Every one has to be right — if you get one wrong,
-              you can re-read and try again.
+              {TRAINING_QUESTIONS.length} questions on what you have read. Every one has to be right —
+              if you get one wrong, you can re-read and try again.
             </p>
             <ol className="training__questions">
               {TRAINING_QUESTIONS.map((q) => (
@@ -233,7 +208,7 @@ export default function TrainingCourse({
                 setStepIndex(0);
               }}
             >
-              Re-read the articles
+              Re-read the pages
             </button>
             <span className="training__counter">
               Answered {Object.keys(answers).length} of {TRAINING_QUESTIONS.length}
@@ -280,13 +255,13 @@ export default function TrainingCourse({
               </h2>
               <p className="training__why">
                 Every answer has to be right. The app does not show which ones were wrong — that
-                would turn the test into a search through the options. Go back to the articles below
+                would turn the test into a search through the options. Go back to the pages below
                 and try again.
               </p>
               <ul className="training__review">
                 {result.reviewSources.map((id) => {
-                  const idx = TRAINING_STEPS.findIndex((s) => s.materialId === id);
-                  return <li key={id}>Article {idx >= 0 ? idx + 1 : "?"} of the course</li>;
+                  const idx = TRAINING_STEPS.findIndex((s) => s.id === id);
+                  return <li key={id}>Page {idx >= 0 ? idx + 1 : "?"} of the course</li>;
                 })}
               </ul>
               <div className="training__footer training__footer--inline">
@@ -299,7 +274,7 @@ export default function TrainingCourse({
                     setResult(null);
                   }}
                 >
-                  Re-read the articles
+                  Re-read the pages
                 </button>
                 <button
                   type="button"

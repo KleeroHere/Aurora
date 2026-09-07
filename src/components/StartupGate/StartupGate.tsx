@@ -4,8 +4,8 @@ import SplashScreen from "./SplashScreen";
 import LoginScreen from "./LoginScreen";
 import TrainingCourse from "../TrainingCourse/TrainingCourse";
 import { useCurrentUser } from "../../context/CurrentUserContext";
-import { getMaterialById, getTrainingProgress, getTrainingSettings } from "../../data/repository";
-import { areCourseMaterialsAvailable, isTrainingRequired } from "../../data/training";
+import { getTrainingProgress, getTrainingSettings } from "../../data/repository";
+import { isTrainingRequired } from "../../data/training";
 
 type Stage = "splash" | "login" | "training" | "app";
 
@@ -44,18 +44,12 @@ export default function StartupGate({ children }: { children: ReactNode }) {
     if (decidedForRef.current === currentUser._id) return;
     let cancelled = false;
     Promise.all([getTrainingSettings(), getTrainingProgress(currentUser._id)])
-      .then(async ([settings, progress]) => {
-        if (cancelled) return;
-        if (!isTrainingRequired(currentUser, settings, progress)) {
-          decidedForRef.current = currentUser._id;
-          return;
-        }
-        // The course articles may not have reached this machine. Do not raise a
-        // barrier that cannot be passed — see areCourseMaterialsAvailable.
-        const ready = await areCourseMaterialsAvailable(getMaterialById);
+      .then(([settings, progress]) => {
         if (cancelled) return;
         decidedForRef.current = currentUser._id;
-        if (ready) setStage("training");
+        // The course carries its own pages, so it can never arrive half-built:
+        // if the app is running, there is something to pass.
+        if (isTrainingRequired(currentUser, settings, progress)) setStage("training");
       })
       // The settings did not read — do not show the course. Locking somebody out
       // because a settings read failed is worse than a course that never showed.

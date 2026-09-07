@@ -446,10 +446,10 @@ function TrainingSection() {
     <section className="admin-page__section">
       <h2 className="admin-page__section-title">Induction course</h2>
       <p className="admin-page__section-hint">
-        With the course switched on, a member of staff signing in for the first time reads four
-        articles from the induction checklist and answers ten questions. Every answer has to be
-        right; until then the app does not open. The completion mark belongs to the person and
-        travels to other machines with a sync.
+        With the course switched on, a member of staff signing in for the first time reads the
+        pages of the induction checklist and answers a test on them. Every answer has to be right;
+        until then the app does not open. The completion mark belongs to the person and travels to
+        other machines with a sync.
       </p>
       <p className="admin-page__section-hint">
         Do not switch it on in the middle of a shift: nobody added earlier has a completion mark, so

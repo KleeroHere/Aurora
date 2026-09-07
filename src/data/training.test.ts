@@ -4,7 +4,6 @@ import {
   TRAINING_PASS_RATIO,
   TRAINING_QUESTIONS,
   TRAINING_STEPS,
-  areCourseMaterialsAvailable,
   defaultTrainingSettings,
   emptyTrainingProgress,
   gradeAttempt,
@@ -31,11 +30,19 @@ function sectionOfMaterialId(id: string): string {
 }
 
 describe("what the induction course is made of", () => {
-  it("has ten questions, each resting on an article the course actually shows", () => {
-    expect(TRAINING_QUESTIONS).toHaveLength(10);
-    const shown = new Set(TRAINING_STEPS.map((s) => s.materialId));
+  it("every question rests on a page the course actually shows", () => {
+    expect(TRAINING_QUESTIONS.length).toBeGreaterThan(0);
+    const shown = new Set(TRAINING_STEPS.map((s) => s.id));
     for (const q of TRAINING_QUESTIONS) {
-      expect(shown.has(q.source), `question ${q.id} points at an article outside the course`).toBe(true);
+      expect(shown.has(q.source), `question ${q.id} points at a page outside the course`).toBe(true);
+    }
+  });
+
+  it("every page of the course has text to show", () => {
+    expect(TRAINING_STEPS.length).toBeGreaterThan(0);
+    for (const step of TRAINING_STEPS) {
+      expect(step.title.length).toBeGreaterThan(0);
+      expect(step.body.blocks.length).toBeGreaterThan(0);
     }
   });
 
@@ -53,7 +60,7 @@ describe("what the induction course is made of", () => {
   });
 
   it("course steps do not repeat", () => {
-    const ids = TRAINING_STEPS.map((s) => s.materialId);
+    const ids = TRAINING_STEPS.map((s) => s.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
 });
@@ -121,7 +128,7 @@ describe("marking: the bar is 100 %", () => {
     expect(result.reviewSources).toEqual([]);
   });
 
-  it("one wrong out of ten — not passed: the bar is exactly 100 %, not “nearly”", () => {
+  it("one wrong answer — not passed: the bar is exactly 100 %, not “nearly”", () => {
     const answers = allCorrect();
     const first = TRAINING_QUESTIONS[0];
     answers[first.id] = (first.correct + 1) % first.options.length;
@@ -138,7 +145,7 @@ describe("marking: the bar is 100 %", () => {
     expect(gradeAttempt({ answers }).passed).toBe(false);
   });
 
-  it("names articles to re-read without giving away which questions failed", () => {
+  it("names pages to re-read without giving away which questions failed", () => {
     const answers = allCorrect();
     const sameSource = TRAINING_QUESTIONS.filter((q) => q.source === TRAINING_QUESTIONS[0].source);
     expect(sameSource.length).toBeGreaterThan(1);
@@ -253,25 +260,5 @@ describe("progress within a block", () => {
     const one = TRAINING_MODULES.map((m) => moduleStatus(assigned({ viewed }), m, ids));
     expect(isProgramComplete(one)).toBe(false);
     expect(isProgramComplete([])).toBe(false);
-  });
-});
-
-describe("the course is not raised when there is nothing to pass", () => {
-  it("all articles present — the course can be shown", async () => {
-    const load = async (id: string) => ({ _id: id });
-    await expect(areCourseMaterialsAvailable(load)).resolves.toBe(true);
-  });
-
-  it("one article missing — do not raise it, or the person is locked out forever", async () => {
-    const missing = TRAINING_STEPS[2].materialId;
-    const load = async (id: string) => (id === missing ? null : { _id: id });
-    await expect(areCourseMaterialsAvailable(load)).resolves.toBe(false);
-  });
-
-  it("the loader threw — assume there is nothing to show", async () => {
-    const load = async () => {
-      throw new Error("the database is not open");
-    };
-    await expect(areCourseMaterialsAvailable(load)).resolves.toBe(false);
   });
 });
